@@ -81,6 +81,16 @@
   .app h3 a:hover { text-decoration: underline; }
   .app p { margin: 2px 0 0; color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
 
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--accent); border-radius: 14px; padding: 16px 18px 18px; }
+  .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .card h3 a { color: var(--text); text-decoration: none; }
+  .card h3 a:hover { text-decoration: underline; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+  .action { margin: 24px 0 0; }
+  .button { display: inline-block; background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; padding: 10px 20px; border-radius: 10px; }
+  .button:hover { filter: brightness(1.1); }
+
   .faq { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 4px 20px; }
   details { border-bottom: 1px solid var(--border); padding: 14px 0; }
   details:last-child { border-bottom: none; }
@@ -110,7 +120,7 @@
 <div class="wrap">
   <header class="top">
     <a class="brand" href="./">VexelRay</a>
-    <nav aria-label="Links"><a href="#apps">Applications</a><a href="#details">Details</a><a href="https://sibarum.github.io/vexelray-framework/">Framework</a><a href="https://github.com/sibarum/vexelray-dist">GitHub</a></nav>
+    <nav aria-label="Links"><a href="#apps">Applications</a><a href="#build">Developers</a><a href="#details">Details</a><a href="https://sibarum.github.io/vexelray-framework/">Framework</a><a href="https://github.com/sibarum/vexelray-dist">GitHub</a></nav>
   </header>
 
   <main>
@@ -167,6 +177,17 @@
           <div class="app-body"><img src="img/rigid-sim.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-sim-rigid">Rigid Sim</a></h3><p>Rigid-body simulation experiments on the VexelRay stack: spheres that collide, bounce, spin and roll, live on the GPU.</p></div></div>
         </article>
       </div>
+    </section>
+
+    <section id="build" aria-labelledby="build-title">
+      <h2 id="build-title">Build your own</h2>
+      <p class="lede">VexelRay is also a framework: Java 25, compiled to a native Windows executable and drawn with Vulkan. Every application above is built on it. Yours can be too, whether a coding agent writes most of it or you write all of it.</p>
+      <div class="cards">
+        <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/getting-started.html">Start from the template</a></h3><p>One command generates a working application with tabs, a file navigator, settings that persist, and tests that build the window without a GPU. Vex, Calculator and MainFrame all started this way.</p></article>
+        <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/developers/with-an-llm.html">Build it with an LLM</a></h3><p>Every repository has a <code>CLAUDE.md</code> with the rules the code does not show. <code>ottermate</code> lets a coding agent drive and screenshot the window it built, so it checks its own work by looking at it.</p></article>
+        <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/developers/in-vex.html">Or write it yourself in Vex</a></h3><p>Vex highlights Java, jumps to any declaration in your project or in the framework, and shows a folder's Maven modules before you open it. MainFrame and Vexplore work alongside it.</p></article>
+      </div>
+      <p class="action"><a class="button" href="https://sibarum.github.io/vexelray-framework/developers/">Read the developer guide</a></p>
     </section>
 
     <section id="details" aria-labelledby="details-title">
