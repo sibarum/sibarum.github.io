@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VexelRay Technology</title>
+<meta name="description" content="Inside the VexelRay framework: frames only when something changes, threads by default, an agent that sees the window it built, and a clock you can test.">
+<meta property="og:title" content="VexelRay Technology">
+<meta property="og:description" content="Inside the VexelRay framework: frames only when something changes, threads by default, an agent that sees the window it built, and a clock you can test.">
+<link rel="icon" href="img/vexplore.png">
+<style>
+  :root {
+    --bg: #050608;
+    --bg-2: #0b0d12;
+    --panel: #10131a;
+    --line: #1f2430;
+    --line-2: #2c3342;
+    --text: #f2f4f8;
+    --muted: #9aa3b5;
+    --dim: #5f6879;
+    --blue: #2563eb;
+    --cyan: #3ee0ff;
+    --violet: #8b5cf6;
+    --lime: #b6f23c;
+    --grad: linear-gradient(100deg, var(--cyan), var(--blue) 55%, var(--violet));
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+  a { color: var(--cyan); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  /* top bar */
+  .top { position: sticky; top: 0; z-index: 10; background: rgba(5, 6, 8, 0.78); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; height: 56px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; font-size: 0.95rem; }
+  .brand i { width: 14px; height: 14px; background: var(--grad); transform: rotate(45deg); border-radius: 2px; }
+  .top nav { margin-left: auto; display: flex; gap: 22px; font-size: 0.88rem; }
+  .top nav a { color: var(--muted); text-decoration: none; }
+  .top nav a:hover { color: var(--text); }
+  @media (max-width: 640px) { .top nav a.opt { display: none; } }
+
+  /* hero */
+  .hero { position: relative; min-height: min(92vh, 860px); display: flex; align-items: center; overflow: hidden; border-bottom: 1px solid var(--line); }
+  #field { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,6,8,0.9) 0%, rgba(5,6,8,0.55) 38%, transparent 65%), linear-gradient(0deg, var(--bg) 0%, transparent 22%); pointer-events: none; }
+  .hero .wrap { position: relative; z-index: 1; width: 100%; padding-top: 64px; padding-bottom: 64px; }
+  .eyebrow { font: 700 0.78rem/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--cyan); }
+  .hero h1 { font-size: clamp(2.8rem, 9vw, 7rem); line-height: 0.92; letter-spacing: -0.045em; font-weight: 900; margin: 20px 0 22px; max-width: 11ch; }
+  .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p.sub { font-size: clamp(1.05rem, 2.2vw, 1.35rem); color: var(--muted); max-width: 40ch; margin: 0; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; font-weight: 700; text-decoration: none; border-radius: 4px; font-size: 0.95rem; }
+  .btn.primary { background: var(--text); color: var(--bg); }
+  .btn.primary:hover { background: var(--cyan); }
+  .btn.ghost { color: var(--text); border: 1px solid var(--line-2); }
+  .btn.ghost:hover { border-color: var(--cyan); }
+
+  /* stat strip */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+  .stat { padding: 34px 16px 30px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: none; }
+  .stat b { display: block; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; font-weight: 900; letter-spacing: -0.04em; }
+  .stat b small { font-size: 0.45em; font-weight: 700; letter-spacing: 0; color: var(--muted); margin-left: 4px; }
+  .stat span { display: block; margin-top: 10px; color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+  @media (max-width: 760px) { .stats { grid-template-columns: 1fr 1fr; } .stat:nth-child(2) { border-right: none; } .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); } }
+
+  /* feature bands */
+  .feature { padding: clamp(64px, 10vw, 120px) 0; border-bottom: 1px solid var(--line); position: relative; }
+  .feature:nth-of-type(even) { background: var(--bg-2); }
+  .feature .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .feature.flip .text { order: 2; }
+  @media (max-width: 900px) { .feature .wrap { grid-template-columns: 1fr; } .feature.flip .text { order: 0; } }
+  .num { font: 700 0.78rem/1 var(--mono); letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase; display: flex; gap: 12px; align-items: center; }
+  .num em { font-style: normal; color: var(--cyan); }
+  .num::after { content: ""; flex: 1; max-width: 80px; height: 1px; background: var(--line-2); }
+  .feature h2 { font-size: clamp(2rem, 4.6vw, 3.4rem); line-height: 1.02; letter-spacing: -0.035em; font-weight: 900; margin: 18px 0 18px; }
+  .feature .pitch { color: var(--muted); font-size: 1.08rem; margin: 0 0 26px; max-width: 52ch; }
+  .specs { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-2); }
+  .specs li { display: grid; grid-template-columns: minmax(96px, 30%) 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 0.93rem; }
+  .specs li b { font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+  .specs li span { color: var(--muted); }
+  .more { display: inline-block; margin-top: 22px; font-weight: 700; font-size: 0.9rem; text-decoration: none; }
+  .more::after { content: " \2192"; }
+  code { font: 0.88em var(--mono); color: #d7e3ff; background: rgba(62, 224, 255, 0.08); padding: 1px 5px; border-radius: 3px; }
+
+  /* visual panels */
+  .vis { position: relative; background: var(--panel); border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden; min-height: 340px; }
+  .vis::before { content: ""; position: absolute; inset: 0; background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 32px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 100%; opacity: 0.35; pointer-events: none; }
+  .vis > * { position: relative; }
+  .vis-label { position: absolute; top: 12px; left: 14px; font: 700 0.68rem/1 var(--mono); letter-spacing: 0.16em; color: var(--dim); text-transform: uppercase; z-index: 2; }
+  .vis canvas { display: block; width: 100%; height: 100%; }
+  .caption { font-size: 0.82rem; color: var(--dim); margin: 10px 2px 0; }
+
+  /* 01 on demand meter */
+  .meter { padding: 48px 22px 22px; display: grid; gap: 18px; }
+  .meter .read { display: flex; align-items: baseline; gap: 10px; }
+  .meter .read b { font: 900 clamp(3.4rem, 9vw, 5.6rem)/1 var(--mono); letter-spacing: -0.05em; font-variant-numeric: tabular-nums; transition: color 0.2s; }
+  .meter .read span { color: var(--muted); font: 700 0.9rem var(--mono); }
+  .meter .state { font: 700 0.75rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; justify-self: start; border: 1px solid currentColor; }
+  .meter canvas { height: 120px; border-top: 1px solid var(--line); }
+  .meter .hint { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  /* 02 lanes */
+  .lanes { padding: 46px 18px 22px; display: grid; gap: 10px; }
+  .lane { display: grid; grid-template-columns: 112px 1fr; gap: 12px; align-items: center; }
+  .lane label { font: 700 0.74rem var(--mono); color: var(--muted); text-align: right; }
+  .track { height: 30px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 3px; position: relative; overflow: hidden; }
+  .pulse { position: absolute; top: 5px; bottom: 5px; border-radius: 2px; left: -30%; animation: run linear infinite; }
+  @keyframes run { to { left: 110%; } }
+  .lane.main .pulse { background: var(--cyan); box-shadow: 0 0 14px var(--cyan); }
+  .lane.time .pulse { background: var(--lime); box-shadow: 0 0 14px var(--lime); }
+  .lane.comp .pulse { background: var(--blue); box-shadow: 0 0 14px var(--blue); }
+  .lane.hand .pulse { background: var(--violet); box-shadow: 0 0 14px var(--violet); }
+  .lane.off .pulse { background: #f59e0b; box-shadow: 0 0 14px #f59e0b; }
+  .lanes .wd { font: 700 0.72rem var(--mono); color: var(--dim); margin: 6px 0 0 124px; }
+  @media (max-width: 480px) { .lane { grid-template-columns: 84px 1fr; } .lanes .wd { margin-left: 96px; } }
+
+  /* 03 terminal */
+  .term { background: #07080b; min-height: 380px; font: 0.84rem/1.65 var(--mono); }
+  .term .bar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .term .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line-2); }
+  .term .bar span { margin-left: 10px; color: var(--dim); font-size: 0.74rem; }
+  .term pre { margin: 0; padding: 14px 16px 18px; white-space: pre-wrap; word-break: break-word; color: #c9d1df; min-height: 330px; }
+  .term .p { color: var(--cyan); }
+  .term .ok { color: var(--lime); }
+  .term .c { color: var(--dim); }
+  .term .cur { display: inline-block; width: 0.6em; height: 1.1em; vertical-align: text-bottom; background: var(--cyan); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* 04 shadelets */
+  .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 46px 18px 0; font: 700 0.72rem var(--mono); }
+  .chain span { padding: 6px 10px; border: 1px solid var(--line-2); border-radius: 3px; color: var(--muted); background: rgba(255,255,255,0.02); }
+  .chain span.on { color: var(--bg); background: var(--cyan); border-color: var(--cyan); }
+  .chain i { color: var(--dim); font-style: normal; }
+  .stage { display: grid; place-items: center; padding: 40px 18px 18px; gap: 22px; }
+  .lookbtn { appearance: none; font: 800 1.05rem system-ui, sans-serif; letter-spacing: 0.02em; color: var(--text); padding: 18px 36px; border-radius: 14px; cursor: pointer; border: none; background: #1a2030; transition: background 0.25s, box-shadow 0.25s, transform 0.18s, color 0.25s; }
+  .lookbtn[data-look="rest"] { box-shadow: 0 6px 18px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08); }
+  .lookbtn[data-look="hover"] { background: #1f2b47; box-shadow: 0 0 0 2px var(--cyan), 0 0 28px rgba(62,224,255,0.55), 0 10px 26px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.14); }
+  .lookbtn[data-look="pressed"] { background: #151a26; transform: translateY(2px); color: var(--cyan); box-shadow: inset 0 3px 10px rgba(0,0,0,0.7), inset 0 -1px 0 rgba(255,255,255,0.05), 0 0 0 1px var(--line-2); }
+  .looks { display: flex; gap: 6px; }
+  .looks button { appearance: none; font: 700 0.72rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--line-2); padding: 6px 10px; border-radius: 3px; cursor: pointer; }
+  .looks button[aria-pressed="true"] { color: var(--bg); background: var(--text); border-color: var(--text); }
+  .painters { font: 0.74rem var(--mono); color: var(--dim); text-align: center; min-height: 1.4em; }
+
+  /* 05 / 06 svg + canvas */
+  .vis svg { display: block; width: 100%; height: auto; }
+  .flow { stroke-dasharray: 6 8; animation: dash 1.4s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -28; } }
+
+  /* 07 pipeline */
+  .pipe { padding: 52px 18px 24px; display: grid; gap: 8px; }
+  .step { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center; padding: 14px 14px; border: 1px solid var(--line-2); border-radius: 4px; background: rgba(255,255,255,0.02); }
+  .step i { font: 800 0.75rem var(--mono); color: var(--bg); background: var(--grad); width: 26px; height: 26px; display: grid; place-items: center; border-radius: 3px; font-style: normal; }
+  .step b { font-size: 0.98rem; }
+  .step small { display: block; color: var(--muted); font-size: 0.8rem; }
+  .step em { font: 700 0.72rem var(--mono); color: var(--cyan); font-style: normal; text-align: right; }
+  .pipe .arrow { height: 14px; width: 1px; background: var(--line-2); margin-left: 30px; }
+  .exe { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .exe span { font: 0.72rem var(--mono); color: var(--muted); border: 1px solid var(--line); padding: 4px 8px; border-radius: 3px; }
+  .exe span b { color: var(--text); }
+
+  /* 08 install */
+  .install { padding: 52px 18px 24px; display: grid; gap: 18px; }
+  .cmd { display: flex; background: #07080b; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden; }
+  .cmd code { flex: 1; min-width: 0; padding: 16px; background: none; color: var(--text); font-size: 0.92rem; white-space: pre-wrap; word-break: break-all; }
+  .cmd code::before { content: "PS> "; color: var(--dim); }
+  .copy { appearance: none; border: none; background: var(--text); color: var(--bg); font: 800 0.85rem system-ui, sans-serif; padding: 0 18px; cursor: pointer; min-width: 84px; }
+  .copy:hover { background: var(--cyan); }
+  .checks { display: grid; gap: 6px; font: 0.82rem/1.5 var(--mono); }
+  .checks div { display: flex; gap: 10px; color: var(--muted); opacity: 0.25; transition: opacity 0.4s; }
+  .checks div.done { opacity: 1; }
+  .checks div::before { content: "\2713"; color: var(--lime); font-weight: 800; }
+  @media (max-width: 480px) { .cmd { flex-direction: column; } .cmd code { white-space: pre-wrap; word-break: break-all; } .copy { padding: 10px; } }
+
+  /* 09 bytes */
+  .bytes { padding: 50px 18px 22px; }
+  .rec { font: 0.82rem var(--mono); color: var(--muted); margin-bottom: 16px; }
+  .rec b { color: var(--text); }
+  .hex { display: grid; grid-template-columns: repeat(16, 1fr); gap: 4px; }
+  .hex span { font: 700 clamp(0.6rem, 1.5vw, 0.8rem) var(--mono); text-align: center; padding: 6px 0; border-radius: 2px; background: rgba(255,255,255,0.03); color: var(--dim); transition: background 0.3s, color 0.3s; }
+  .hex span.h { background: rgba(37,99,235,0.25); color: #bcd0ff; }
+  .hex span.n { background: rgba(182,242,60,0.18); color: var(--lime); }
+  .hex span.v { background: rgba(62,224,255,0.16); color: var(--cyan); }
+  .hex span.f { background: rgba(139,92,246,0.22); color: #d4c4ff; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; font: 0.74rem var(--mono); color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .timing { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+  .timing div { border: 1px solid var(--line); padding: 12px; border-radius: 3px; }
+  .timing b { display: block; font: 900 1.8rem/1 var(--mono); letter-spacing: -0.04em; }
+  .timing span { font-size: 0.78rem; color: var(--muted); }
+
+  /* more tiles */
+  .section-head { padding: clamp(64px, 10vw, 110px) 0 32px; }
+  .section-head h2 { font-size: clamp(2rem, 4.6vw, 3.4rem); line-height: 1.02; letter-spacing: -0.035em; font-weight: 900; margin: 18px 0 12px; }
+  .section-head p { color: var(--muted); max-width: 60ch; margin: 0; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: clamp(64px, 10vw, 110px); }
+  .tile { background: var(--bg); padding: 28px 24px 30px; position: relative; transition: background 0.2s; }
+  .tile:hover { background: var(--panel); }
+  .tile::before { content: ""; position: absolute; left: 0; top: 0; width: 40px; height: 2px; background: var(--grad); }
+  .tile h3 { margin: 0 0 8px; font-size: 1.12rem; letter-spacing: -0.01em; }
+  .tile h3 a { color: var(--text); text-decoration: none; }
+  .tile h3 a:hover { color: var(--cyan); }
+  .tile p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+  .tile .k { font: 900 1.6rem/1 var(--mono); letter-spacing: -0.03em; display: block; margin-bottom: 14px; }
+
+  /* spec sheet */
+  .sheet { border-top: 1px solid var(--line); background: var(--bg-2); }
+  .sheet table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin-bottom: 48px; }
+  .sheet th, .sheet td { text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .sheet th { width: 30%; color: var(--muted); font-weight: 600; }
+  .sheet td { color: var(--text); }
+  .sheet tr:hover td, .sheet tr:hover th { background: rgba(255,255,255,0.02); }
+  @media (max-width: 560px) { .sheet th, .sheet td { display: block; width: auto; padding: 4px 0; border: none; } .sheet th { padding-top: 14px; } .sheet tr { display: block; border-bottom: 1px solid var(--line); padding-bottom: 12px; } }
+
+  .closing { text-align: center; padding: clamp(80px, 12vw, 140px) 0; position: relative; overflow: hidden; }
+  .closing::before { content: ""; position: absolute; left: 50%; top: 50%; width: 900px; height: 900px; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(37,99,235,0.28), transparent 60%); pointer-events: none; }
+  .closing h2 { position: relative; font-size: clamp(2.2rem, 6vw, 4.6rem); letter-spacing: -0.04em; line-height: 1; font-weight: 900; margin: 0 0 18px; }
+  .closing p { position: relative; color: var(--muted); max-width: 52ch; margin: 0 auto; }
+  .closing .ctas { position: relative; justify-content: center; }
+
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 0.84rem; color: var(--dim); }
+  footer a { color: var(--muted); }
+
+  .btn:focus-visible, .copy:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .pulse, .flow, .term .cur { animation: none; }
+    .pulse { left: 30%; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><i></i>VexelRay</a>
+    <nav aria-label="Links">
+      <a class="opt" href="#on-demand">Features</a>
+      <a class="opt" href="#specs">Specs</a>
+      <a href="https://sibarum.github.io/vexelray-framework/">Docs</a>
+      <a href="./">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="eyebrow">VexelRay framework &middot; 0.1</div>
+      <h1 id="hero-title">Desktop software, <span class="grad">drawn live on the GPU.</span></h1>
+      <p class="sub">You write Java 25 and ship a native Windows executable that draws with Vulkan. Everything between the two is built to be fast, deterministic and easy to observe.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#on-demand">See what's inside</a>
+        <a class="btn ghost" href="https://sibarum.github.io/vexelray-framework/getting-started.html">Start building</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats wrap" role="list">
+    <div class="stat" role="listitem"><b>0<small>fps</small></b><span>when nothing changes and the window is in the background</span></div>
+    <div class="stat" role="listitem"><b>1.03<small>ms</small></b><span>median from waking to the first frame, starting from idle</span></div>
+    <div class="stat" role="listitem"><b>1<small>draw</small></b><span>call for a whole window when it shows no images</span></div>
+    <div class="stat" role="listitem"><b>577<small>ns</small></b><span>for a clock handoff, measured in the native-image build</span></div>
+  </div>
+
+  <!-- 01 -->
+  <section class="feature" id="on-demand" aria-labelledby="f1">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>01</em> GUI</div>
+        <h2 id="f1">A retained tree, drawn immediately, <span class="grad">only on demand.</span></h2>
+        <p class="pitch">You change widgets through thread-safe handles from any thread. The GUI thread takes those changes once per frame and draws the whole window with one SDF uber-shader. If nothing is moving and no input arrives, the loop sleeps and draws nothing.</p>
+        <ul class="specs">
+          <li><b>140 &rarr; 0 fps</b><span>A still window drops to 5 fps when focused and 0 fps in the background</span></li>
+          <li><b>1.03 ms</b><span>Median wake to first frame (p95 1.6 ms)</span></li>
+          <li><b>1 draw call</b><span>Shadows, lighting and text are all in that one call</span></li>
+          <li><b>Build-failing</b><span>Architecture rules are tests: palette, layering, model writers, sync seams</span></li>
+        </ul>
+        <a class="more" href="https://github.com/sibarum/vexelray-gui">vexelray-gui</a>
+      </div>
+      <div class="reveal">
+        <div class="vis meter" id="meter">
+          <div class="vis-label">Frame loop &middot; live</div>
+          <span class="state" id="meter-state">idle</span>
+          <div class="read"><b id="meter-fps">0</b><span>frames / s</span></div>
+          <canvas id="meter-graph" aria-hidden="true"></canvas>
+          <p class="hint">Move your pointer over this panel. The meter only draws a frame when there's input or something is animating, the same way the loop does.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="feature flip" id="threads" aria-labelledby="f2">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>02</em> Concurrency</div>
+        <h2 id="f2">Multithreaded <span class="grad">by default.</span> Checked by the compiler.</h2>
+        <p class="pitch">There are exactly five lanes. The main thread keeps Vulkan, the window and the present, and nothing else. App logic runs on component threads, disk work on a bounded offload lane, and time on its own timeline. The annotation processor decides placement at compile time, so the binary has no scheduler and no work stealing.</p>
+        <ul class="specs">
+          <li><b>5 lanes</b><span>main, timeline, component, handler, offload. The list is closed</span></li>
+          <li><b>33 rules</b><span>19 of them are enforced by a test or the type system. A blocking cycle in the message graph is a compile error</span></li>
+          <li><b>Watchdog</b><span>A lane that hangs is reported by name. It takes only its own thread down, never the window</span></li>
+          <li><b>Compute queue</b><span>A Vulkan compute queue can be lent to one component, so physics never blocks a frame</span></li>
+        </ul>
+        <a class="more" href="https://github.com/sibarum/vexelray-framework">vexelray-framework</a>
+      </div>
+      <div class="reveal">
+        <div class="vis lanes" aria-label="Five lanes running side by side">
+          <div class="vis-label">Lanes</div>
+          <div class="lane main"><label>main</label><div class="track"><i class="pulse" style="width:9%;animation-duration:1.1s"></i><i class="pulse" style="width:9%;animation-duration:1.1s;animation-delay:-.55s"></i></div></div>
+          <div class="lane time"><label>timeline</label><div class="track"><i class="pulse" style="width:4%;animation-duration:2.2s"></i><i class="pulse" style="width:4%;animation-duration:2.2s;animation-delay:-1.1s"></i></div></div>
+          <div class="lane comp"><label>component&#8209;a</label><div class="track"><i class="pulse" style="width:22%;animation-duration:3.1s"></i></div></div>
+          <div class="lane comp"><label>component&#8209;b</label><div class="track"><i class="pulse" style="width:14%;animation-duration:2.6s;animation-delay:-1.4s"></i></div></div>
+          <div class="lane hand"><label>handler</label><div class="track"><i class="pulse" style="width:6%;animation-duration:1.7s;animation-delay:-.3s"></i></div></div>
+          <div class="lane off"><label>offload</label><div class="track"><i class="pulse" style="width:34%;animation-duration:4.2s;animation-delay:-2s"></i></div></div>
+          <div class="wd">watchdog: all lanes responsive</div>
+        </div>
+        <p class="caption">Illustration. All lanes are platform threads, and placement is fixed in the binary.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="feature" id="ottermate" aria-labelledby="f3">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>03</em> Agent tooling</div>
+        <h2 id="f3">Ottermate. <span class="grad">The agent looks at its own work.</span></h2>
+        <p class="pitch">Most of the stack was written by a coding agent working with its author. An agent that only checks that the code compiled hasn't really checked anything. Debug builds have an automation port, and <code>ottermate</code> uses it to launch the app, click, type and wait for it to settle, then take a screenshot with the app's own GPU.</p>
+        <ul class="specs">
+          <li><b>--automation=0</b><span>Chooses a free port and prints it, so parallel runs never collide</span></li>
+          <li><b>Loopback only</b><span>Off by default, and linked only into debug builds</span></li>
+          <li><b>By role, not pixel</b><span>Nodes are addressed by role, name or landmark. The pointer moves across the screen, so hover fires</span></li>
+          <li><b>settle</b><span>Waits for the frame loop and the animation timeline to go quiet, so no screenshot is stale</span></li>
+          <li><b>CLAUDE.md</b><span>Every repository has one, and generated projects start with one</span></li>
+        </ul>
+        <a class="more" href="https://sibarum.github.io/vexelray-framework/developers/with-an-llm.html">Building with an LLM</a>
+      </div>
+      <div class="reveal">
+        <div class="vis term">
+          <div class="bar"><i></i><i></i><i></i><span>agent session</span></div>
+<pre id="term" aria-label="An example ottermate session"></pre>
+        </div>
+        <p class="caption">An example session, shortened.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="feature flip" id="looks" aria-labelledby="f4">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>04</em> Rendering</div>
+        <h2 id="f4">Shaders built from code. <span class="grad">Themes made of looks.</span></h2>
+        <p class="pitch">Shaders are written as SupirVast IR in Java and lowered to SPIR-V at build time. That same IR also runs on the CPU, and a test suite checks that the CPU and GPU agree. The uber-shader is assembled from <em>shadelets</em>, a chain of source, modifiers, painters and composite. A <em>look</em> is one such chain with its styles. Hover and pressed are simply different looks.</p>
+        <ul class="specs">
+          <li><b>4 techniques</b><span>Canvas, panel, mesh and SDF ray-march, composited into one frame on one device</span></li>
+          <li><b>27 floats</b><span>A fixed vertex size, however many effects an app uses</span></li>
+          <li><b>4&times;10&#8315;&#8310;</b><span>The largest difference between CPU and GPU results across the differential suite</span></li>
+          <li><b>9 numbers</b><span>A palette is nine authored values. Hover and press are one signed lightness step in Oklab</span></li>
+        </ul>
+        <a class="more" href="https://github.com/sibarum/supirvast">supirvast</a>
+      </div>
+      <div class="reveal">
+        <div class="vis" id="lookvis">
+          <div class="vis-label">One element &middot; three looks</div>
+          <div class="chain" aria-label="Shadelet chain">
+            <span class="on">Box</span><i>&rarr;</i><span data-p="fill">fill</span><span data-p="outline">outline</span><span data-p="glow">glow</span><span data-p="shadow">shadow</span><span data-p="emboss">emboss</span><i>&rarr;</i><span class="on">composite</span><i>&rarr;</i><span class="on">clip</span>
+          </div>
+          <div class="stage">
+            <button class="lookbtn" id="lookbtn" type="button" data-look="rest">Render</button>
+            <div class="looks" role="group" aria-label="Choose a look">
+              <button type="button" data-set="rest" aria-pressed="true">rest</button>
+              <button type="button" data-set="hover" aria-pressed="false">hover</button>
+              <button type="button" data-set="pressed" aria-pressed="false">pressed</button>
+            </div>
+            <div class="painters" id="painters"></div>
+          </div>
+        </div>
+        <p class="caption">Mimicked in CSS on this page. In VexelRay each look is a set of painters inside the one uber-shader.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="feature" id="kronometer" aria-labelledby="f5">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>05</em> Time</div>
+        <h2 id="f5">Kronometer. <span class="grad">A clock you can unit-test.</span></h2>
+        <p class="pitch">It is built like ChucK's clock and Vue's graph. A <code>Shred</code> runs in zero logical time between <code>advance(ms(250))</code> calls, so it can't drift and can't race. Signals form a dependency graph, and each knows how far ahead its value is fixed, so a pure animation is computed in advance and reading it at <code>now</code> is just a buffer index. Swap in the virtual clock and a ten-minute UI scenario runs in microseconds.</p>
+        <ul class="specs">
+          <li><b>577 ns</b><span>A handoff under native-image, about 2,900 of them in a tenth of a 60 Hz frame</span></li>
+          <li><b>0 handoffs</b><span>for ten thousand animations written as Signals</span></li>
+          <li><b>Exact ratios</b><span>Nested tempos use exact <code>Ratio</code>s, not doubles. Eases land exactly on 0 and 1</span></li>
+          <li><b>Rate domains</b><span>Fixed, dynamic, 48 kHz audio with lookahead, and dilated worlds that slow down instead of skipping</span></li>
+        </ul>
+        <a class="more" href="https://github.com/sibarum/kronometer">kronometer</a>
+      </div>
+      <div class="reveal">
+        <div class="vis" style="min-height:0">
+          <div class="vis-label">Kron.virtual()</div>
+          <canvas id="kron" height="340" aria-label="Three eased animations on a shared timeline"></canvas>
+        </div>
+        <p class="caption">Three easings driven by one logical clock. Each run is identical, frame for frame.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="feature flip" id="atchung" aria-labelledby="f6">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>06</em> Messaging</div>
+        <h2 id="f6">Atchung. <span class="grad">One topic, any transport.</span></h2>
+        <p class="pitch">Inside the VM, messages go over a zero-copy bus with versioned, lock-free state snapshots. When a message has to leave the process, elektro-Q carries the same topic over TCP, a Unix socket or UDP, with codecs generated at compile time from <code>@Message</code> records. The fast in-VM path never pays for the network.</p>
+        <ul class="specs">
+          <li><b>4 transports</b><span>in-VM, TCP, Unix domain sockets, and UDP netcode with sequencing, acks and a network simulator</span></li>
+          <li><b>5 policies</b><span>For backpressure: drop oldest, drop newest, coalesce latest, block or fail</span></li>
+          <li><b>0 reflection</b><span>No dependencies. Delivery is inline, async or pumped</span></li>
+          <li><b>Bridged</b><span><code>ElektroBridge</code> carries a local topic across the wire in both directions, with loop prevention</span></li>
+        </ul>
+        <a class="more" href="https://github.com/sibarum/atchung">atchung</a>
+      </div>
+      <div class="reveal">
+        <div class="vis" style="min-height:0">
+          <div class="vis-label">Topic&lt;Frame&gt;</div>
+          <svg viewBox="0 0 560 360" role="img" aria-label="One topic reaching four transports">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#3ee0ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <g fill="none" stroke="url(#g1)" stroke-width="2">
+              <path class="flow" d="M200 180 C 300 180, 300 70, 390 70"/>
+              <path class="flow" d="M200 180 C 300 180, 300 145, 390 145" style="animation-duration:1.1s"/>
+              <path class="flow" d="M200 180 C 300 180, 300 220, 390 220" style="animation-duration:1.7s"/>
+              <path class="flow" d="M200 180 C 300 180, 300 295, 390 295" style="animation-duration:1.25s"/>
+            </g>
+            <g filter="url(#glow)">
+              <rect x="56" y="140" width="144" height="80" rx="6" fill="#0b0d12" stroke="#3ee0ff" stroke-width="1.5"/>
+            </g>
+            <text x="128" y="176" text-anchor="middle" fill="#f2f4f8" font-family="ui-monospace, Consolas, monospace" font-weight="700" font-size="15">Topic</text>
+            <text x="128" y="198" text-anchor="middle" fill="#9aa3b5" font-family="ui-monospace, Consolas, monospace" font-size="11">@Message record</text>
+            <g font-family="ui-monospace, Consolas, monospace" font-size="13" font-weight="700">
+              <rect x="390" y="50" width="140" height="40" rx="4" fill="#10131a" stroke="#2c3342"/><text x="406" y="75" fill="#f2f4f8">in-VM</text><text x="514" y="75" text-anchor="end" fill="#b6f23c" font-size="10">0-copy</text>
+              <rect x="390" y="125" width="140" height="40" rx="4" fill="#10131a" stroke="#2c3342"/><text x="406" y="150" fill="#f2f4f8">TCP</text>
+              <rect x="390" y="200" width="140" height="40" rx="4" fill="#10131a" stroke="#2c3342"/><text x="406" y="225" fill="#f2f4f8">Unix socket</text>
+              <rect x="390" y="275" width="140" height="40" rx="4" fill="#10131a" stroke="#2c3342"/><text x="406" y="300" fill="#f2f4f8">UDP netcode</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="feature" id="native" aria-labelledby="f7">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>07</em> Toolchain</div>
+        <h2 id="f7">Develop on the JVM. <span class="grad">Ship a native executable.</span></h2>
+        <p class="pitch">You write ordinary Java 25 with dependency injection in the Spring Boot style. An annotation processor does the wiring at compile time, so there is no reflection and the app starts as fast as a hand-written <code>main</code>. GraalVM native-image then turns it into one Windows executable. The bindings to Win32 and Vulkan use Panama FFM directly, with no LWJGL, GLFW or SDL.</p>
+        <ul class="specs">
+          <li><b>Java 25</b><span>Maven and the JVM while you develop, GraalVM native-image when you release</span></li>
+          <li><b>0 reflection</b><span>Injection is generated by the annotation processor, so native-image needs no configuration for it</span></li>
+          <li><b>5 MB heap</b><span>Stays flat under load, with 17 threads throughout</span></li>
+          <li><b>30&ndash;40 s</b><span>For a native build of an application</span></li>
+        </ul>
+        <a class="more" href="https://sibarum.github.io/vexelray-framework/getting-started.html">Getting started</a>
+      </div>
+      <div class="reveal">
+        <div class="vis pipe">
+          <div class="vis-label">Build</div>
+          <div class="step"><i>1</i><div><b>Java 25 source</b><small>@Configuration &middot; @Provides &middot; @Component</small></div><em>you</em></div>
+          <div class="arrow"></div>
+          <div class="step"><i>2</i><div><b>Annotation processing</b><small>wiring, lanes, message graph and codecs</small></div><em>javac</em></div>
+          <div class="arrow"></div>
+          <div class="step"><i>3</i><div><b>SupirVast &rarr; SPIR-V</b><small>shaders and MSDF font atlases built by Maven plugins</small></div><em>mvn</em></div>
+          <div class="arrow"></div>
+          <div class="step"><i>4</i><div><b>GraalVM native-image</b><small>one Windows .exe, with Panama FFM bindings to Win32 and Vulkan</small>
+            <div class="exe"><span>calculator <b>38.4 MB</b></span><span>pix <b>41.5 MB</b></span><span>vexplore <b>43.6 MB</b></span><span>fluid-sim <b>57.7 MB</b></span></div></div><em>.exe</em></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section class="feature flip" id="installer" aria-labelledby="f8">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>08</em> Distribution</div>
+        <h2 id="f8">One line installs. <span class="grad">The same line updates.</span></h2>
+        <p class="pitch">The installer generator writes each app's installer, updater and uninstaller from a single <code>installer.json</code>, and writes the suite's one-line install as well. Installs are per user and need no administrator. Each app gets its own entry in Settings. The apps find and launch each other through the install registry.</p>
+        <ul class="specs">
+          <li><b>SHA-256</b><span>Every download is checked, and nothing is written to disk until all of them pass</span></li>
+          <li><b>No admin</b><span>Installs under your user only, and the uninstaller removes exactly what was installed</span></li>
+          <li><b>Re-run = update</b><span>Each executable's version is compared, and an app that is already current is left alone</span></li>
+          <li><b>Generated</b><span>Installers, manifests and this site's install page all come from one generator</span></li>
+        </ul>
+        <a class="more" href="https://github.com/sibarum/vexelray-installer">vexelray-installer</a>
+      </div>
+      <div class="reveal">
+        <div class="vis install" id="installvis">
+          <div class="vis-label">Windows &middot; PowerShell</div>
+          <div class="cmd"><code id="install-command">irm https://sibarum.github.io/install.ps1 | iex</code><button class="copy" type="button" data-copy="install-command">Copy</button></div>
+          <div class="checks" id="checks">
+            <div>manifest.json fetched</div>
+            <div>install.ps1 matches manifest SHA-256</div>
+            <div>release binary matches SHA-256</div>
+            <div>all downloads verified, writing</div>
+            <div>shortcuts, PATH, Settings &rsaquo; Apps</div>
+          </div>
+        </div>
+        <p class="caption">Windows 10 or 11, 64-bit, with a Vulkan driver. <a href="./#details">What it changes</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section class="feature" id="intrabuf" aria-labelledby="f9">
+    <div class="wrap">
+      <div class="text reveal">
+        <div class="num"><em>09</em> Data</div>
+        <h2 id="f9">Intrabuf. <span class="grad">Binary, at nanosecond speed.</span></h2>
+        <p class="pitch">An annotation processor writes a straight-line codec for each record, with no reflection, so it works under native-image. Fields are stored by position with no tags. Integers are zigzag varints, and nulls and booleans share one bitset. A structural fingerprint catches schema drift. Every payload also has a readable text form.</p>
+        <ul class="specs">
+          <li><b>~14 / 12 ns</b><span>To encode / decode a 63-byte record</span></li>
+          <li><b>8 B</b><span>Header in BACKWARD and FULL modes (12 B in STRICT)</span></li>
+          <li><b>3 modes</b><span>STRICT, BACKWARD and FULL compatibility, plus snapshot drift detection</span></li>
+          <li><b>CLI</b><span>A native <code>intrabuf</code> inspector, and <code>fromBytes</code> accepts either form</span></li>
+        </ul>
+        <a class="more" href="https://github.com/sibarum/intrabuf">intrabuf</a>
+      </div>
+      <div class="reveal">
+        <div class="vis bytes">
+          <div class="vis-label">Wire layout</div>
+          <div class="rec"><b>record</b> SensorReading(long id, Double temp, boolean ok, String unit)</div>
+          <div class="hex" id="hex" aria-hidden="true"></div>
+          <div class="legend"><span><i style="background:#2563eb"></i>header</span><span><i style="background:#b6f23c"></i>null + bool bitset</span><span><i style="background:#3ee0ff"></i>zigzag varint</span><span><i style="background:#8b5cf6"></i>fixed / bytes</span></div>
+          <div class="timing"><div><b>~14 ns</b><span>encode, 63 B</span></div><div><b>~12 ns</b><span>decode, 63 B</span></div></div>
+        </div>
+        <p class="caption">Illustrative layout, not a byte-exact dump. The timings come from a quick loop rather than JMH, so read them as orders of magnitude.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- more -->
+  <section aria-labelledby="more-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="num"><em>10</em> And more</div>
+        <h2 id="more-title">Deeper in the stack.</h2>
+        <p>More of the things the stack does underneath that you wouldn't expect from a desktop framework.</p>
+      </div>
+      <div class="tiles">
+        <article class="tile reveal"><span class="k grad">Enclosure</span><h3><a href="https://github.com/sibarum/vexelray-gui">Plots that can't lie</a></h3><p>Curves are evaluated with interval arithmetic into an enclosure that provably contains every value. The arithmetic finds poles and asymptotes, so a plot never draws a line through one.</p></article>
+        <article class="tile reveal"><span class="k grad">6,580 glyphs</span><h3><a href="https://github.com/sibarum/vexelray">MSDF text, one draw</a></h3><p>Noto Sans and Noto Mono are baked into MSDF atlases at build time. Shadow, lit edges and letterpress are transfer functions over one rounded-box SDF, with no textures and no extra passes.</p></article>
+        <article class="tile reveal"><span class="k grad">2 queues</span><h3><a href="https://github.com/sibarum/vexelray-sim-rigid">Physics on its own queue</a></h3><p>The fluid sim is two-fluid MLS-MPM, with water riding on mercury at 13.6:1. Rigid bodies use XPBD with Coulomb friction, at 1.2 ms a step for 4,096 spheres. Both run on a second Vulkan queue.</p></article>
+        <article class="tile reveal"><span class="k grad">Proved</span><h3>Determinism, in Lean</h3><p>Lean proofs cover the fluid's fixed-point particle-to-grid scatter. It produces the same grid under any atomic ordering, and its quantised shares conserve mass and momentum exactly.</p></article>
+        <article class="tile reveal"><span class="k grad">15+ formats</span><h3><a href="https://github.com/sibarum/vexelray-codec">Decoded onto the GPU</a></h3><p>Images from PNG to QOI and SVG. Video in H.264, HEVC, VP9 and AV1. Meshes in OBJ, PLY and STL. The codec is optional, so an app with no pictures links no decoders.</p></article>
+        <article class="tile reveal"><span class="k grad">Flip model</span><h3><a href="https://github.com/sibarum/dxgi-bridge">Resizes without stalls</a></h3><p>Vulkan draws and a D3D12 flip-model DXGI swapchain presents. Resizing reallocates nothing, which avoids the multi-second stalls hybrid-GPU laptops are known for.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- spec sheet -->
+  <section class="sheet" id="specs" aria-labelledby="specs-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="num"><em>11</em> Specifications</div>
+        <h2 id="specs-title">Spec sheet.</h2>
+      </div>
+      <table>
+        <tbody>
+          <tr><th scope="row">Language</th><td>Java 25, built with Maven</td></tr>
+          <tr><th scope="row">Release binary</th><td>GraalVM native-image, one Windows executable per app (38&ndash;68 MB)</td></tr>
+          <tr><th scope="row">Graphics</th><td>Vulkan, presented through a DXGI flip-model swapchain. Bindings use Panama FFM directly</td></tr>
+          <tr><th scope="row">Shaders</th><td>SupirVast IR &rarr; SPIR-V at build time. The same IR runs on the CPU through Truffle</td></tr>
+          <tr><th scope="row">GUI</th><td>Retained node tree, a single SDF uber-shader, flex layout in rem, em, dp, % and viewport units, zoom from 0.5&times; to 3&times;</td></tr>
+          <tr><th scope="row">Frame loop</th><td>Draws on demand. 0 fps when idle, 1.03 ms median wake to frame</td></tr>
+          <tr><th scope="row">Threading</th><td>5 lanes placed at compile time, platform threads, a watchdog per lane</td></tr>
+          <tr><th scope="row">Clock</th><td>Kronometer: realtime, virtual (deterministic) and driven clocks, and 4 slip policies</td></tr>
+          <tr><th scope="row">Messaging</th><td>Atchung in-VM bus. elektro-Q across processes over TCP, Unix sockets or UDP</td></tr>
+          <tr><th scope="row">Serialization</th><td>Intrabuf: generated codecs, positional varint format, text form</td></tr>
+          <tr><th scope="row">Automation</th><td>Loopback automation port in debug builds, driven by the <code>ottermate</code> CLI</td></tr>
+          <tr><th scope="row">Install</th><td>One PowerShell line, per user, SHA-256 verified, and re-running it updates</td></tr>
+          <tr><th scope="row">Platforms</th><td>Windows 10 and 11, 64-bit. The Linux and macOS backends are not finished</td></tr>
+          <tr><th scope="row">Status</th><td>0.1.0, an experimental prerelease. Nothing in it is stable yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="closing" aria-labelledby="close-title">
+    <div class="wrap">
+      <h2 id="close-title">See it run.</h2>
+      <p>Seven applications built on the framework, installed with one line. Or build your own from the template, with an agent or without one.</p>
+      <div class="ctas">
+        <a class="btn primary" href="./">Install the applications</a>
+        <a class="btn ghost" href="https://sibarum.github.io/vexelray-framework/developers/">Read the developer guide</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">VexelRay 0.1.0 is an experimental prerelease. The figures on this page are taken from each repository's own documentation. Like the framework, this page only animates what you can see. <a href="https://github.com/sibarum">github.com/sibarum</a></div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function $(id) { return document.getElementById(id); }
+  function size(c) {
+    var r = c.getBoundingClientRect();
+    c.width = Math.max(1, Math.round(r.width * dpr));
+    c.height = Math.max(1, Math.round(r.height * dpr));
+    return c.getContext("2d");
+  }
+  // Runs fn(t) on animation frames only while el is on screen: render on demand.
+  function whileVisible(el, fn) {
+    var on = false, raf = 0;
+    function loop(t) { if (!on) return; fn(t); raf = requestAnimationFrame(loop); }
+    new IntersectionObserver(function (es) {
+      var v = es[0].isIntersecting;
+      if (v && !on) { on = true; raf = requestAnimationFrame(loop); }
+      else if (!v) { on = false; cancelAnimationFrame(raf); }
+    }).observe(el);
+  }
+
+  /* reveal */
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  Array.prototype.forEach.call(document.querySelectorAll(".reveal"), function (el) { io.observe(el); });
+
+  /* hero: a field of points lit by moving SDF circles */
+  (function () {
+    var c = $("field"), ctx, w, h, mx = -1e4, my = -1e4;
+    function resize() { ctx = size(c); w = c.width; h = c.height; }
+    resize();
+    addEventListener("resize", resize);
+    c.parentNode.addEventListener("pointermove", function (e) {
+      var r = c.getBoundingClientRect(); mx = (e.clientX - r.left) * dpr; my = (e.clientY - r.top) * dpr;
+    });
+    c.parentNode.addEventListener("pointerleave", function () { mx = my = -1e4; });
+    function frame(t) {
+      t = t / 1000;
+      ctx.clearRect(0, 0, w, h);
+      var step = 22 * dpr;
+      var blobs = [
+        [w * (0.68 + 0.12 * Math.sin(t * 0.31)), h * (0.45 + 0.2 * Math.cos(t * 0.27)), 210 * dpr],
+        [w * (0.82 + 0.08 * Math.cos(t * 0.43)), h * (0.7 + 0.12 * Math.sin(t * 0.37)), 150 * dpr],
+        [w * (0.55 + 0.1 * Math.cos(t * 0.21)), h * (0.25 + 0.1 * Math.sin(t * 0.5)), 120 * dpr],
+        [mx, my, 120 * dpr]
+      ];
+      for (var y = step / 2; y < h; y += step) {
+        for (var x = step / 2; x < w; x += step) {
+          var d = 1e9;
+          for (var i = 0; i < blobs.length; i++) {
+            var dx = x - blobs[i][0], dy = y - blobs[i][1];
+            var sd = Math.sqrt(dx * dx + dy * dy) - blobs[i][2];
+            // smooth union
+            var k = 80 * dpr, hh = Math.max(k - Math.abs(d - sd), 0) / k;
+            d = Math.min(d, sd) - hh * hh * k * 0.25;
+          }
+          var glow = Math.exp(-Math.abs(d) / (34 * dpr));
+          var inside = d < 0 ? 0.32 + 0.18 * Math.sin(d / (18 * dpr) - t * 2) : 0;
+          var a = Math.min(1, 0.07 + glow * 1.0 + inside);
+          var hue = 190 + 70 * (x / w);
+          ctx.fillStyle = "hsla(" + hue + ",95%," + (55 + glow * 20) + "%," + a + ")";
+          var s = (1.6 + glow * 3.2 + (d < 0 ? 0.8 : 0)) * dpr;
+          ctx.fillRect(x - s / 2, y - s / 2, s, s);
+        }
+      }
+    }
+    if (reduce) frame(8000); else whileVisible(c, frame);
+  })();
+
+  /* 01: frame meter that only draws on input */
+  (function () {
+    var box = $("meter"), g = $("meter-graph"), ctx = size(g), fpsEl = $("meter-fps"), st = $("meter-state");
+    var hist = [], frames = [], last = 0, raf = 0, wakeUntil = 0;
+    function draw(now) {
+      frames.push(now);
+      while (frames.length && frames[0] < now - 1000) frames.shift();
+      render(now);
+      if (now < wakeUntil) raf = requestAnimationFrame(draw);
+      else { raf = 0; setTimeout(idle, 1000); }
+    }
+    function render(now) {
+      var fps = frames.length;
+      fpsEl.textContent = fps;
+      fpsEl.style.color = fps ? "var(--cyan)" : "var(--dim)";
+      st.textContent = fps ? "drawing" : "idle · 0 frames";
+      st.style.color = fps ? "var(--cyan)" : "var(--lime)";
+      if (now - last > 50) { hist.push(fps); last = now; if (hist.length > 120) hist.shift(); }
+      var w = g.width, h = g.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, h * 0.5); ctx.lineTo(w, h * 0.5); ctx.stroke();
+      ctx.beginPath();
+      for (var i = 0; i < hist.length; i++) {
+        var x = w - (hist.length - 1 - i) * (w / 119), y = h - 6 * dpr - (Math.min(hist[i], 144) / 144) * (h - 14 * dpr);
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.strokeStyle = "#3ee0ff"; ctx.lineWidth = 2 * dpr; ctx.shadowColor = "#3ee0ff"; ctx.shadowBlur = 10 * dpr; ctx.stroke(); ctx.shadowBlur = 0;
+    }
+    function idle() {
+      if (raf) return;
+      var now = performance.now();
+      while (frames.length && frames[0] < now - 1000) frames.shift();
+      for (var n = 0; n < 6; n++) hist.push(0);
+      while (hist.length > 120) hist.shift();
+      render(now);
+    }
+    function wake() {
+      wakeUntil = performance.now() + 220;
+      if (!raf) raf = requestAnimationFrame(draw);
+    }
+    box.addEventListener("pointermove", wake);
+    box.addEventListener("pointerdown", wake);
+    addEventListener("resize", function () { ctx = size(g); render(performance.now()); });
+    render(performance.now());
+  })();
+
+  /* 03: typed ottermate session */
+  (function () {
+    var pre = $("term");
+    var script = [
+      ["p", "> ottermate --launch \"text-editor.exe --automation=0\""],
+      ["c", "  automation: localhost:51873"],
+      ["p", "> click role=button name=\"New tab\""],
+      ["ok", "  ok"],
+      ["p", "> type \"public record Point(int x, int y) {}\""],
+      ["ok", "  ok"],
+      ["p", "> key CTRL+S"],
+      ["p", "> settle"],
+      ["ok", "  ok  frames quiet, timeline quiet"],
+      ["p", "> find landmark=status"],
+      ["c", "  [status] \"Saved · Untitled-1.java · Java\""],
+      ["p", "> shot editor.png"],
+      ["ok", "  ok  1280x800, rendered offscreen"],
+      ["c", "# the agent opens editor.png and checks it"]
+    ];
+    function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+    function full() {
+      pre.innerHTML = script.map(function (l) { return '<span class="' + l[0] + '">' + esc(l[1]) + "</span>"; }).join("\n");
+    }
+    if (reduce) { full(); return; }
+    var started = false;
+    new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting || started) return;
+      started = true;
+      var li = 0, ci = 0, done = "";
+      (function tick() {
+        if (li >= script.length) { pre.innerHTML = done + '<span class="cur"></span>'; return; }
+        var l = script[li], typed = l[0] === "p";
+        ci = typed ? ci + 2 : l[1].length;
+        var part = l[1].slice(0, ci);
+        pre.innerHTML = done + '<span class="' + l[0] + '">' + esc(part) + '</span><span class="cur"></span>';
+        if (ci >= l[1].length) {
+          done += '<span class="' + l[0] + '">' + esc(l[1]) + "</span>\n";
+          li++; ci = 0;
+          setTimeout(tick, typed ? 260 : 340);
+        } else setTimeout(tick, 22);
+      })();
+    }, { threshold: 0.4 }).observe(pre);
+  })();
+
+  /* 04: looks */
+  (function () {
+    var btn = $("lookbtn"), painters = $("painters"), chips = document.querySelectorAll("#lookvis .chain [data-p]");
+    var sets = { rest: ["fill", "shadow"], hover: ["fill", "outline", "glow", "shadow"], pressed: ["fill", "emboss"] };
+    var manual = null;
+    function show(name) {
+      btn.setAttribute("data-look", name);
+      painters.textContent = "look \"" + name + "\" = Box → " + sets[name].join(" + ") + " → composite → clip";
+      Array.prototype.forEach.call(chips, function (c) { c.classList.toggle("on", sets[name].indexOf(c.getAttribute("data-p")) !== -1); });
+      Array.prototype.forEach.call(document.querySelectorAll(".looks button"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-set") === name)); });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll(".looks button"), function (b) {
+      b.addEventListener("click", function () { manual = b.getAttribute("data-set"); show(manual); });
+    });
+    btn.addEventListener("pointerenter", function () { show("hover"); });
+    btn.addEventListener("pointerleave", function () { show(manual || "rest"); });
+    btn.addEventListener("pointerdown", function () { show("pressed"); });
+    btn.addEventListener("pointerup", function () { show("hover"); });
+    show("rest");
+  })();
+
+  /* 05: kronometer timeline on a virtual clock */
+  (function () {
+    var c = $("kron"), ctx;
+    function resize() { c.style.height = "340px"; ctx = size(c); }
+    resize(); addEventListener("resize", resize);
+    var eases = [
+      ["easeOutCubic", "#3ee0ff", function (x) { return 1 - Math.pow(1 - x, 3); }],
+      ["easeInOutSine", "#8b5cf6", function (x) { return -(Math.cos(Math.PI * x) - 1) / 2; }],
+      ["spring", "#b6f23c", function (x) { return x === 1 ? 1 : 1 - Math.cos(x * 4.5 * Math.PI) * Math.exp(-x * 6); }]
+    ];
+    var PERIOD = 2400, HOLD = 600;
+    function frame(t) {
+      var w = c.width, h = c.height, p = 22 * dpr, top = 40 * dpr;
+      var logical = Math.floor((reduce ? 1700 : t) / (1000 / 60)) * (1000 / 60); // quantised to 60 Hz ticks
+      var cyc = logical % (PERIOD + HOLD), x01 = Math.min(1, cyc / PERIOD);
+      ctx.clearRect(0, 0, w, h);
+      var rowH = (h - top - 30 * dpr) / 3;
+      ctx.font = (11 * dpr) + "px ui-monospace, Consolas, monospace";
+      for (var i = 0; i < 3; i++) {
+        var y0 = top + i * rowH, e = eases[i];
+        // ticks
+        ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineWidth = 1;
+        for (var k = 0; k <= 12; k++) { var tx = p + (w - 2 * p) * k / 12; ctx.beginPath(); ctx.moveTo(tx, y0 + 8 * dpr); ctx.lineTo(tx, y0 + rowH - 8 * dpr); ctx.stroke(); }
+        // curve
+        ctx.beginPath();
+        for (var s = 0; s <= 100; s++) {
+          var u = s / 100, cx = p + (w - 2 * p) * u, cy = y0 + rowH - 12 * dpr - e[2](u) * (rowH - 30 * dpr);
+          s ? ctx.lineTo(cx, cy) : ctx.moveTo(cx, cy);
+        }
+        ctx.strokeStyle = e[1] + "55"; ctx.lineWidth = 1.5 * dpr; ctx.stroke();
+        // dot
+        var dx = p + (w - 2 * p) * x01, dy = y0 + rowH - 12 * dpr - e[2](x01) * (rowH - 30 * dpr);
+        ctx.fillStyle = e[1]; ctx.shadowColor = e[1]; ctx.shadowBlur = 14 * dpr;
+        ctx.beginPath(); ctx.arc(dx, dy, 5 * dpr, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+        ctx.fillStyle = "#9aa3b5"; ctx.fillText(e[0], p, y0 + 4 * dpr);
+      }
+      // playhead
+      var px = p + (w - 2 * p) * x01;
+      ctx.strokeStyle = "rgba(242,244,248,0.5)"; ctx.lineWidth = 1 * dpr;
+      ctx.beginPath(); ctx.moveTo(px, top - 6 * dpr); ctx.lineTo(px, h - 26 * dpr); ctx.stroke();
+      ctx.fillStyle = "#f2f4f8";
+      var ms = Math.round(x01 * PERIOD);
+      ctx.fillText("now = " + (ms / 1000).toFixed(3) + " s   tick " + Math.round(ms / (1000 / 60)), p, h - 8 * dpr);
+    }
+    if (reduce) frame(0); else whileVisible(c, frame);
+  })();
+
+  /* 08: install checks light up in order */
+  (function () {
+    var rows = document.querySelectorAll("#checks div"), started = false;
+    function go() {
+      Array.prototype.forEach.call(rows, function (r, i) { setTimeout(function () { r.classList.add("done"); }, reduce ? 0 : 400 + i * 420); });
+    }
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting && !started) { started = true; go(); } }, { threshold: 0.5 }).observe($("installvis"));
+  })();
+
+  /* 09: byte layout */
+  (function () {
+    var hex = $("hex");
+    // header 8 | bitset 1 | varint id 2 | double 8 | varint len 1 | utf8 2  (illustrative)
+    var layout = [["h", 8], ["n", 1], ["v", 2], ["f", 8], ["v", 1], ["f", 2]];
+    var bytes = [0x49,0x42,0x01,0x00,0x9c,0x3e,0x11,0x07, 0x05, 0xd4,0x00, 0x40,0x35,0x80,0x00,0x00,0x00,0x00,0x00, 0x02, 0xc2,0xb0];
+    var html = "", n = 0;
+    layout.forEach(function (seg) { for (var i = 0; i < seg[1]; i++, n++) html += '<span data-k="' + seg[0] + '">' + ("0" + bytes[n].toString(16)).slice(-2) + "</span>"; });
+    for (; n < 32; n++) html += "<span>··</span>";
+    hex.innerHTML = html;
+    var cells = hex.querySelectorAll("span[data-k]"), started = false;
+    function light() { Array.prototype.forEach.call(cells, function (s, i) { setTimeout(function () { s.className = s.getAttribute("data-k"); }, reduce ? 0 : i * 45); }); }
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting && !started) { started = true; light(); } }, { threshold: 0.5 }).observe(hex);
+  })();
+
+  /* copy */
+  Array.prototype.forEach.call(document.querySelectorAll(".copy"), function (button) {
+    button.addEventListener("click", function () {
+      var value = $(button.getAttribute("data-copy")).textContent;
+      var p = navigator.clipboard && window.isSecureContext ? navigator.clipboard.writeText(value) : Promise.reject();
+      p.then(function () { button.textContent = "Copied"; }, function () { button.textContent = "Ctrl+C"; });
+      setTimeout(function () { button.textContent = "Copy"; }, 1600);
+    });
+  });
+})();
+</script>
+</body>
+</html>
