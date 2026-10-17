@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VexelRay Licenses</title>
+<meta name="description" content="VexelRay's licenses, the third-party software built into its applications, and trademark notices.">
+<link rel="icon" href="img/logo.svg">
+<style>
+  :root {
+    --bg: #050608;
+    --bg-2: #0b0d12;
+    --panel: #10131a;
+    --line: #1f2430;
+    --line-2: #2c3342;
+    --text: #f2f4f8;
+    --muted: #9aa3b5;
+    --dim: #5f6879;
+    --blue: #2563eb;
+    --cyan: #3ee0ff;
+    --violet: #8b5cf6;
+    --grad: linear-gradient(100deg, var(--cyan), var(--blue) 55%, var(--violet));
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+  a { color: var(--cyan); }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  .top { position: sticky; top: 0; z-index: 10; background: rgba(5, 6, 8, 0.78); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; height: 56px; max-width: 1200px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; font-size: 0.95rem; }
+  .brand img { width: 26px; height: 26px; }
+  .top nav { margin-left: auto; display: flex; gap: 22px; font-size: 0.88rem; }
+  .top nav a { color: var(--muted); text-decoration: none; }
+  .top nav a:hover { color: var(--text); }
+
+  header.page { padding: clamp(48px, 8vw, 88px) 0 24px; }
+  .eyebrow { font: 700 0.78rem/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); }
+  h1 { font-size: clamp(2.4rem, 7vw, 4.4rem); line-height: 0.95; letter-spacing: -0.045em; font-weight: 900; margin: 18px 0 16px; }
+  .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { color: var(--muted); font-size: 1.08rem; max-width: 62ch; margin: 0; }
+
+  section { padding: 40px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); letter-spacing: -0.03em; font-weight: 900; margin: 12px 0 10px; }
+  section > .wrap > p { color: var(--muted); max-width: 70ch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 18px; }
+  th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th { font: 700 0.7rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); border-bottom-color: var(--line-2); }
+  tbody th { font-weight: 700; color: var(--text); }
+  td { color: var(--muted); }
+  td.lic { color: var(--text); white-space: nowrap; }
+  @media (max-width: 640px) {
+    thead { display: none; }
+    table, tbody, tr, th, td { display: block; }
+    tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
+    th, td { border: none; padding: 2px 0; }
+    td.lic { white-space: normal; }
+  }
+  code { font: 0.88em var(--mono); color: #d7e3ff; background: rgba(62, 224, 255, 0.08); padding: 1px 5px; border-radius: 3px; }
+  .note { margin-top: 18px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--cyan); color: var(--muted); font-size: 0.92rem; max-width: 72ch; }
+  .marks p { color: var(--muted); font-size: 0.92rem; margin: 8px 0; max-width: 80ch; }
+
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 0.84rem; color: var(--dim); }
+  footer a { color: var(--muted); }
+  a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="img/logo.svg" alt="">VexelRay</a>
+    <nav aria-label="Links">
+      <a href="technology.html">Technology</a>
+      <a href="https://sibarum.github.io/vexelray-framework/">Docs</a>
+      <a href="./">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <header class="page">
+    <div class="wrap">
+      <div class="eyebrow">Legal</div>
+      <h1>Licenses <span class="grad">and notices.</span></h1>
+      <p class="lede">VexelRay is built on the work of many other projects. This page lists the licenses of VexelRay's own repositories, the third-party software built into the applications, and the trademarks mentioned on this site.</p>
+    </div>
+  </header>
+
+  <section id="own" aria-labelledby="own-title">
+    <div class="wrap">
+      <div class="eyebrow">VexelRay</div>
+      <h2 id="own-title">VexelRay's own repositories</h2>
+      <p>These repositories include a license file:</p>
+      <table>
+        <thead><tr><th scope="col">Repository</th><th scope="col">License</th><th scope="col">Files</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">supirvast</th><td class="lic">Apache-2.0 (code), CC BY 4.0 (docs)</td><td><a href="https://github.com/sibarum/supirvast/blob/master/LICENSE">LICENSE</a> &middot; <a href="https://github.com/sibarum/supirvast/blob/master/LICENSE-docs">LICENSE-docs</a> &middot; <a href="https://github.com/sibarum/supirvast/blob/master/NOTICE">NOTICE</a></td></tr>
+          <tr><th scope="row">mainframe</th><td class="lic">Apache-2.0 (code), CC BY 4.0 (docs)</td><td><a href="https://github.com/sibarum/mainframe/blob/main/LICENSE">LICENSE</a> &middot; <a href="https://github.com/sibarum/mainframe/blob/main/LICENSE-docs">LICENSE-docs</a> &middot; <a href="https://github.com/sibarum/mainframe/blob/main/NOTICE">NOTICE</a></td></tr>
+          <tr><th scope="row">vexplore</th><td class="lic">Apache-2.0</td><td><a href="https://github.com/sibarum/vexplore/blob/main/LICENSE">LICENSE</a></td></tr>
+          <tr><th scope="row">vexelray-installer</th><td class="lic">Apache-2.0</td><td><a href="https://github.com/sibarum/vexelray-installer/blob/main/LICENSE">LICENSE</a></td></tr>
+          <tr><th scope="row">vexelray-sim-core</th><td class="lic">Apache-2.0</td><td><a href="https://github.com/sibarum/vexelray-sim-core/blob/main/LICENSE">LICENSE</a></td></tr>
+          <tr><th scope="row">vexelray-sim-fluid</th><td class="lic">Apache-2.0</td><td><a href="https://github.com/sibarum/vexelray-sim-fluid/blob/main/LICENSE">LICENSE</a></td></tr>
+          <tr><th scope="row">vexelray-sim-rigid</th><td class="lic">Apache-2.0</td><td><a href="https://github.com/sibarum/vexelray-sim-rigid/blob/main/LICENSE">LICENSE</a></td></tr>
+        </tbody>
+      </table>
+      <p class="note">The other repositories, including the framework, the GUI, the engine, Kronometer, Atchung and Intrabuf, don't include a license yet, so for now they come with no license to reuse their code. You're welcome to read them and to use the applications. To use their code in something of your own, <a href="https://github.com/sibarum/vexelray-framework/issues/new">open an issue</a> and ask.</p>
+    </div>
+  </section>
+
+  <section id="third-party" aria-labelledby="tp-title">
+    <div class="wrap">
+      <div class="eyebrow">Third-party software</div>
+      <h2 id="tp-title">Built into the applications</h2>
+      <p>The applications published from this site (version 0.1.0) contain the following third-party software. Each one is used under its own license, linked here.</p>
+      <table>
+        <thead><tr><th scope="col">Component</th><th scope="col">License</th><th scope="col">In</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><a href="https://www.graalvm.org/">Oracle GraalVM</a> Native Image runtime</th><td class="lic"><a href="https://www.oracle.com/downloads/licenses/graal-free-license.html">GraalVM Free Terms and Conditions</a></td><td>Every application</td></tr>
+          <tr><th scope="row"><a href="https://github.com/oracle/graal">Truffle and the GraalVM SDK</a></th><td class="lic"><a href="https://oss.oracle.com/licenses/upl/">UPL 1.0</a></td><td>Every application</td></tr>
+          <tr><th scope="row"><a href="https://github.com/notofonts/latin-greek-cyrillic">Noto Sans and Noto Sans Mono</a></th><td class="lic"><a href="https://openfontlicense.org/">SIL OFL 1.1</a></td><td>Every application, as text atlases</td></tr>
+          <tr><th scope="row"><a href="https://github.com/btzy/nativefiledialog-extended">nativefiledialog-extended</a></th><td class="lic"><a href="https://github.com/btzy/nativefiledialog-extended/blob/master/LICENSE">zlib</a></td><td>Every application</td></tr>
+          <tr><th scope="row"><a href="https://github.com/KhronosGroup/SPIRV-Headers">SPIR-V grammar</a>, The Khronos Group</th><td class="lic"><a href="https://opensource.org/license/mit">MIT</a></td><td>Every application</td></tr>
+          <tr><th scope="row"><a href="https://github.com/KhronosGroup/SPIRV-Tools">SPIRV-Tools</a> and <a href="https://github.com/KhronosGroup/SPIRV-Cross">SPIRV-Cross</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Fluid Sim, Rigid Sim</td></tr>
+          <tr><th scope="row"><a href="https://github.com/image-rs/image">image</a>, <a href="https://github.com/linebender/resvg">resvg</a> and their Rust dependencies</th><td class="lic">MIT or Apache-2.0, plus zlib, BSD and Unicode-3.0 for some dependencies</td><td>Pix, Vexplore</td></tr>
+          <tr><th scope="row"><a href="https://github.com/eclipse-tm4e/tm4e">Eclipse TM4E</a></th><td class="lic"><a href="https://www.eclipse.org/legal/epl-2.0/">EPL-2.0</a></td><td>Vex</td></tr>
+          <tr><th scope="row">TextMate grammars from <a href="https://github.com/microsoft/vscode">Visual Studio Code</a></th><td class="lic"><a href="https://github.com/microsoft/vscode/blob/main/LICENSE.txt">MIT</a></td><td>Vex</td></tr>
+          <tr><th scope="row"><a href="https://github.com/jruby/joni">Joni</a> and <a href="https://github.com/jruby/jcodings">JCodings</a></th><td class="lic"><a href="https://opensource.org/license/mit">MIT</a></td><td>Vex</td></tr>
+          <tr><th scope="row"><a href="https://github.com/google/gson">Gson</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
+          <tr><th scope="row"><a href="https://github.com/snakeyaml/snakeyaml-engine">SnakeYAML Engine</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
+          <tr><th scope="row"><a href="https://github.com/javaparser/javaparser">JavaParser</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a> (dual-licensed with LGPL-3.0)</td><td>Vex</td></tr>
+          <tr><th scope="row"><a href="https://github.com/Vineflower/vineflower">Vineflower</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
+        </tbody>
+      </table>
+      <p class="note">The applications draw through the Vulkan loader and Direct3D 12 already on your computer. Neither is included in the downloads. Vulkan and Windows bindings are written in VexelRay itself, so no Vulkan SDK headers are included either.</p>
+    </div>
+  </section>
+
+  <section id="trademarks" class="marks" aria-labelledby="tm-title">
+    <div class="wrap">
+      <div class="eyebrow">Trademarks</div>
+      <h2 id="tm-title">Trademark notices</h2>
+      <p>VexelRay is an independent project. It is not affiliated with, sponsored by or endorsed by Anthropic, Oracle, the Khronos Group, Microsoft or Google. Names are used here only to say what VexelRay is built with.</p>
+      <p>Claude and Claude Code are trademarks of Anthropic, PBC.</p>
+      <p>Oracle, Java and GraalVM are trademarks or registered trademarks of Oracle and/or its affiliates.</p>
+      <p>Vulkan and SPIR-V are trademarks or registered trademarks of The Khronos Group Inc.</p>
+      <p>Microsoft, Windows, DirectX and Direct3D are trademarks of the Microsoft group of companies.</p>
+      <p>Noto is a trademark of Google LLC.</p>
+      <p>Other names may be trademarks of their respective owners.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Something missing or wrong here? <a href="https://github.com/sibarum/vexelray-framework/issues/new">Open an issue</a>.</div>
+</footer>
+</body>
+</html>

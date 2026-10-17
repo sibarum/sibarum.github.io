@@ -8,6 +8,7 @@
 <meta property="og:title" content="VexelRay Technology">
 <meta property="og:description" content="Inside the VexelRay framework: frames only when something changes, threads by default, an agent that sees the window it built, and a clock you can test.">
 <link rel="icon" href="img/logo.svg">
+<script>if ("IntersectionObserver" in window) document.documentElement.classList.add("js");</script>
 <style>
   :root {
     --bg: #050608;
@@ -207,6 +208,18 @@
   .tile p { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
   .tile .k { font: 900 1.6rem/1 var(--mono); letter-spacing: -0.03em; display: block; margin-bottom: 14px; }
 
+  /* built with */
+  .credits { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+  .credit { position: relative; background: var(--panel); border: 1px solid var(--line-2); border-radius: 6px; padding: 30px 26px 32px; overflow: hidden; }
+  .credit::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--grad); }
+  .credit::after { content: ""; position: absolute; right: -80px; top: -80px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(62,224,255,0.12), transparent 70%); pointer-events: none; }
+  .credit .who { font: 700 0.72rem var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+  .credit h3 { margin: 10px 0 12px; font-size: clamp(1.7rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -0.035em; line-height: 1; }
+  .credit h3 a { color: var(--text); text-decoration: none; }
+  .credit h3 a:hover { color: var(--cyan); }
+  .credit p { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+  .credit-more { color: var(--dim); font-size: 0.86rem; margin: 22px 0 clamp(64px, 10vw, 110px); max-width: 80ch; }
+
   /* spec sheet */
   .sheet { border-top: 1px solid var(--line); background: var(--bg-2); }
   .sheet table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin-bottom: 48px; }
@@ -224,14 +237,16 @@
 
   footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 0.84rem; color: var(--dim); }
   footer a { color: var(--muted); }
+  footer p { margin: 0 0 10px; max-width: 110ch; }
+  footer .legal { font-size: 0.76rem; line-height: 1.6; }
 
   .btn:focus-visible, .copy:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.in { opacity: 1; transform: none; }
+  .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .js .reveal.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .reveal { opacity: 1; transform: none; transition: none; }
+    .js .reveal { opacity: 1; transform: none; transition: none; }
     .pulse, .flow, .term .cur { animation: none; }
     .pulse { left: 30%; }
   }
@@ -335,13 +350,13 @@
       <div class="text reveal">
         <div class="num"><em>03</em> Agent tooling</div>
         <h2 id="f3">Ottermate. <span class="grad">The agent looks at its own work.</span></h2>
-        <p class="pitch">Most of the stack was written by a coding agent working with its author. An agent that only checks that the code compiled hasn't really checked anything. Debug builds have an automation port, and <code>ottermate</code> uses it to launch the app, click, type and wait for it to settle, then take a screenshot with the app's own GPU.</p>
+        <p class="pitch">Most of the stack was written with Claude Code, Anthropic's coding agent, working alongside its author. An agent that only checks that the code compiled hasn't really checked anything. Debug builds have an automation port, and <code>ottermate</code> uses it to launch the app, click, type and wait for it to settle, then take a screenshot with the app's own GPU.</p>
         <ul class="specs">
           <li><b>--automation=0</b><span>Chooses a free port and prints it, so parallel runs never collide</span></li>
           <li><b>Loopback only</b><span>Off by default, and linked only into debug builds</span></li>
           <li><b>By role, not pixel</b><span>Nodes are addressed by role, name or landmark. The pointer moves across the screen, so hover fires</span></li>
           <li><b>settle</b><span>Waits for the frame loop and the animation timeline to go quiet, so no screenshot is stale</span></li>
-          <li><b>CLAUDE.md</b><span>Every repository has one, and generated projects start with one</span></li>
+          <li><b>CLAUDE.md</b><span>The framework and the GUI carry one with the rules the code doesn't show, and every generated project starts with one</span></li>
         </ul>
         <a class="more" href="https://sibarum.github.io/vexelray-framework/developers/with-an-llm.html">Building with an LLM</a>
       </div>
@@ -572,11 +587,40 @@
     </div>
   </section>
 
+  <!-- built with -->
+  <section id="built-with" aria-labelledby="credits-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="num"><em>11</em> Built with</div>
+        <h2 id="credits-title">Standing on remarkable shoulders.</h2>
+        <p>VexelRay would not exist without three pieces of other people's work, and we're grateful for each of them.</p>
+      </div>
+      <div class="credits">
+        <article class="credit reveal">
+          <span class="who">Anthropic</span>
+          <h3><a href="https://claude.com/claude-code">Claude Code</a></h3>
+          <p>Most of VexelRay was written with Claude Code, Anthropic's coding agent, working alongside its author: the engine, the framework, the GUI and the applications. Ottermate exists so Claude can see the windows it builds.</p>
+        </article>
+        <article class="credit reveal">
+          <span class="who">Oracle</span>
+          <h3><a href="https://www.graalvm.org/">GraalVM</a></h3>
+          <p>Oracle GraalVM's Native Image compiles every application ahead of time into a single Windows executable that runs without a JVM. Truffle, from the same project, runs SupirVast's shader IR on the CPU.</p>
+        </article>
+        <article class="credit reveal">
+          <span class="who">The Khronos Group</span>
+          <h3><a href="https://www.vulkan.org/">Vulkan</a></h3>
+          <p>Every pixel VexelRay draws goes through Vulkan, the open, cross-platform graphics and compute API, and every shader is compiled to SPIR-V. The simulations run their physics on Vulkan compute queues.</p>
+        </article>
+      </div>
+      <p class="credit-more">VexelRay is independent and not affiliated with or endorsed by Anthropic, Oracle or the Khronos Group. The fonts, libraries and other third-party software in the applications are listed with their licenses on the <a href="licenses.html">licenses page</a>.</p>
+    </div>
+  </section>
+
   <!-- spec sheet -->
   <section class="sheet" id="specs" aria-labelledby="specs-title">
     <div class="wrap">
       <div class="section-head reveal">
-        <div class="num"><em>11</em> Specifications</div>
+        <div class="num"><em>12</em> Specifications</div>
         <h2 id="specs-title">Spec sheet.</h2>
       </div>
       <table>
@@ -613,7 +657,10 @@
 </main>
 
 <footer>
-  <div class="wrap">VexelRay 0.1.0 is an experimental prerelease. The figures on this page are taken from each repository's own documentation. Like the framework, this page only animates what you can see. <a href="https://github.com/sibarum">github.com/sibarum</a></div>
+  <div class="wrap">
+    <p>VexelRay 0.1.0 is an experimental prerelease. The figures on this page are taken from each repository's own documentation. Like the framework, this page only animates what you can see. <a href="https://github.com/sibarum">github.com/sibarum</a> &middot; <a href="licenses.html">Licenses and notices</a></p>
+    <p class="legal">Claude and Claude Code are trademarks of Anthropic, PBC. Oracle, Java and GraalVM are trademarks or registered trademarks of Oracle and/or its affiliates. Vulkan and SPIR-V are trademarks or registered trademarks of The Khronos Group Inc. Windows and Direct3D are trademarks of the Microsoft group of companies. Other names may be trademarks of their respective owners. VexelRay is not affiliated with or endorsed by any of them.</p>
+  </div>
 </footer>
 
 <script>
