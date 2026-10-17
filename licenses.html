@@ -51,7 +51,7 @@
   thead th { font: 700 0.7rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); border-bottom-color: var(--line-2); }
   tbody th { font-weight: 700; color: var(--text); }
   td { color: var(--muted); }
-  td.lic { color: var(--text); white-space: nowrap; }
+  td.lic { color: var(--text); min-width: 14em; }
   @media (max-width: 640px) {
     thead { display: none; }
     table, tbody, tr, th, td { display: block; }
@@ -114,24 +114,26 @@
     <div class="wrap">
       <div class="eyebrow">Third-party software</div>
       <h2 id="tp-title">Built into the applications</h2>
-      <p>The applications published from this site (version 0.1.0) contain the following third-party software. Each one is used under its own license, linked here.</p>
+      <p>The applications published from this site (version 0.1.0) contain the following third-party software. Each one is used under its own license, linked here. From each application's next release, its install folder also has a <code>THIRD-PARTY-NOTICES.txt</code> next to the executable, listing what that executable contains with the full text of each license.</p>
       <table>
         <thead><tr><th scope="col">Component</th><th scope="col">License</th><th scope="col">In</th></tr></thead>
         <tbody>
-          <tr><th scope="row"><a href="https://www.graalvm.org/">Oracle GraalVM</a> Native Image runtime</th><td class="lic"><a href="https://www.oracle.com/downloads/licenses/graal-free-license.html">GraalVM Free Terms and Conditions</a></td><td>Every application</td></tr>
+          <tr><th scope="row"><a href="https://www.graalvm.org/">Oracle GraalVM</a> Native Image runtime and Java class library</th><td class="lic"><a href="https://www.oracle.com/downloads/licenses/graal-free-license.html">GraalVM Free Terms and Conditions</a>; the class library under the <a href="https://www.oracle.com/downloads/licenses/no-fee-license.html">Oracle No-Fee Terms and Conditions</a>, with zlib, ICU, Unicode and CLDR notices</td><td>Every application</td></tr>
           <tr><th scope="row"><a href="https://github.com/oracle/graal">Truffle and the GraalVM SDK</a></th><td class="lic"><a href="https://oss.oracle.com/licenses/upl/">UPL 1.0</a></td><td>Every application</td></tr>
           <tr><th scope="row"><a href="https://github.com/notofonts/latin-greek-cyrillic">Noto Sans and Noto Sans Mono</a></th><td class="lic"><a href="https://openfontlicense.org/">SIL OFL 1.1</a></td><td>Every application, as text atlases</td></tr>
           <tr><th scope="row"><a href="https://github.com/btzy/nativefiledialog-extended">nativefiledialog-extended</a></th><td class="lic"><a href="https://github.com/btzy/nativefiledialog-extended/blob/master/LICENSE">zlib</a></td><td>Every application</td></tr>
           <tr><th scope="row"><a href="https://github.com/KhronosGroup/SPIRV-Headers">SPIR-V grammar</a>, The Khronos Group</th><td class="lic"><a href="https://opensource.org/license/mit">MIT</a></td><td>Every application</td></tr>
           <tr><th scope="row"><a href="https://github.com/KhronosGroup/SPIRV-Tools">SPIRV-Tools</a> and <a href="https://github.com/KhronosGroup/SPIRV-Cross">SPIRV-Cross</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Fluid Sim, Rigid Sim</td></tr>
-          <tr><th scope="row"><a href="https://github.com/image-rs/image">image</a>, <a href="https://github.com/linebender/resvg">resvg</a> and their Rust dependencies</th><td class="lic">MIT or Apache-2.0, plus zlib, BSD and Unicode-3.0 for some dependencies</td><td>Pix, Vexplore</td></tr>
+          <tr><th scope="row"><a href="https://github.com/image-rs/image">image</a>, <a href="https://github.com/linebender/resvg">resvg</a>, their Rust dependencies and the Rust standard library</th><td class="lic">MIT or Apache-2.0, plus zlib and BSD for some dependencies, and Unicode-3.0 for the standard library's Unicode tables</td><td>Pix, Vexplore</td></tr>
+          <tr><th scope="row">Apache Xerces, in the Java class library's XML parser</th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
           <tr><th scope="row"><a href="https://github.com/eclipse-tm4e/tm4e">Eclipse TM4E</a></th><td class="lic"><a href="https://www.eclipse.org/legal/epl-2.0/">EPL-2.0</a></td><td>Vex</td></tr>
           <tr><th scope="row">TextMate grammars from <a href="https://github.com/microsoft/vscode">Visual Studio Code</a></th><td class="lic"><a href="https://github.com/microsoft/vscode/blob/main/LICENSE.txt">MIT</a></td><td>Vex</td></tr>
           <tr><th scope="row"><a href="https://github.com/jruby/joni">Joni</a> and <a href="https://github.com/jruby/jcodings">JCodings</a></th><td class="lic"><a href="https://opensource.org/license/mit">MIT</a></td><td>Vex</td></tr>
           <tr><th scope="row"><a href="https://github.com/google/gson">Gson</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
-          <tr><th scope="row"><a href="https://github.com/snakeyaml/snakeyaml-engine">SnakeYAML Engine</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
+          <tr><th scope="row"><a href="https://bitbucket.org/snakeyaml/snakeyaml-engine">SnakeYAML Engine</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
           <tr><th scope="row"><a href="https://github.com/javaparser/javaparser">JavaParser</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a> (dual-licensed with LGPL-3.0)</td><td>Vex</td></tr>
           <tr><th scope="row"><a href="https://github.com/Vineflower/vineflower">Vineflower</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
+          <tr><th scope="row"><a href="https://ffmpeg.org/">FFmpeg</a> libraries, as separate DLLs in an <code>ffmpeg</code> folder</th><td class="lic"><a href="https://www.gnu.org/licenses/lgpl-3.0.html">LGPL</a>; its license and source are named in that folder</td><td>Pix, from its next release</td></tr>
         </tbody>
       </table>
       <p class="note">The applications draw through the Vulkan loader and Direct3D 12 already on your computer. Neither is included in the downloads. Vulkan and Windows bindings are written in VexelRay itself, so no Vulkan SDK headers are included either.</p>
