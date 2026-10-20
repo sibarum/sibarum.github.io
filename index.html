@@ -5,9 +5,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VexelRay</title>
-<meta name="description" content="Seven desktop applications drawn live on the GPU, which know about each other. One line installs them all.">
+<meta name="description" content="Nine desktop applications drawn live on the GPU, which know about each other. One line installs them all.">
 <meta property="og:title" content="VexelRay">
-<meta property="og:description" content="Seven desktop applications drawn live on the GPU, which know about each other. One line installs them all.">
+<meta property="og:description" content="Nine desktop applications drawn live on the GPU, which know about each other. One line installs them all.">
 <link rel="icon" href="img/logo.svg">
 <style>
   :root {
@@ -82,6 +82,7 @@
   .app h3 { margin: 0; font-size: 1.08rem; letter-spacing: -0.01em; }
   .app h3 a { color: var(--text); text-decoration: none; }
   .app h3 a:hover { color: var(--cyan); }
+  .app h3 .opt { margin-left: 6px; padding: 2px 6px; border: 1px solid var(--line-2); border-radius: 4px; font: 600 0.68rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); vertical-align: middle; }
   .app p { margin: 3px 0 0; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
 
   .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
@@ -144,9 +145,9 @@
   <div class="hero">
     <canvas id="field" aria-hidden="true"></canvas>
     <div class="wrap">
-      <span class="badge">0.1.0 · experimental prerelease</span>
+      <span class="badge">0.1.1 · experimental prerelease</span>
       <h1>VexelRay</h1>
-      <p class="tagline">Seven desktop applications drawn live on the GPU, which know about each other. One line installs them all.</p>
+      <p class="tagline">Nine desktop applications drawn live on the GPU, which know about each other. One line installs them all.</p>
 
       <div class="install">
         <p class="notice" id="notice" hidden></p>
@@ -169,7 +170,7 @@
     <div class="wrap">
     <div class="eyebrow">Applications</div>
     <h2 id="apps-title">What you get</h2>
-    <p class="lede">Desktop applications built on the VexelRay stack: a file explorer, a text editor, an image viewer, a terminal, a calculator, and fluid and rigid-body simulations. They are separate programs that know about each other, so a file in the explorer opens in the editor or the viewer, and the editor can show a file in the explorer.</p>
+    <p class="lede">Desktop applications built on the VexelRay stack: a file explorer, a text editor, an image viewer, a terminal, a calculator, fluid and rigid-body simulations, a desktop client for Claude Code, and an inspector that shows a running app's frame loop. They are separate programs that know about each other, so a file in the explorer opens in the editor or the viewer, and the editor can show a file in the explorer.</p>
     <div class="apps">
         <article class="app" id="app-vexplore">
           <div class="shot"><img class="screen" src="img/vexplore-screen.png" alt="Vexplore: one video clicked, the suggestion rail offering all nine videos here and a move" loading="lazy"></div>
@@ -193,11 +194,19 @@
         </article>
         <article class="app" id="app-fluid-sim">
           <div class="shot"><img class="screen" src="img/fluid-sim-screen.png" alt="A dam break of water onto mercury: water (blue) rides on mercury (red)" loading="lazy"></div>
-          <div class="app-body"><img src="img/fluid-sim.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-sim-fluid">Fluid Sim</a></h3><p>Fluid simulation experiments on the VexelRay stack: dam breaks, mixing, heat and a 3D dam break, live on the GPU.</p></div></div>
+          <div class="app-body"><img src="img/fluid-sim.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-sim-fluid">Fluid Sim</a> <span class="opt">optional</span></h3><p>Fluid simulation experiments on the VexelRay stack: dam breaks, mixing, heat and a 3D dam break, live on the GPU.</p></div></div>
         </article>
         <article class="app" id="app-rigid-sim">
           <div class="shot"><img class="screen" src="img/rigid-sim-screen.png" alt="Rigid Sim: a pile of 1000 spheres slumping in its box, solved by Gauss–Seidel" loading="lazy"></div>
-          <div class="app-body"><img src="img/rigid-sim.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-sim-rigid">Rigid Sim</a></h3><p>Rigid-body simulation experiments on the VexelRay stack: spheres that collide, bounce, spin and roll, live on the GPU.</p></div></div>
+          <div class="app-body"><img src="img/rigid-sim.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-sim-rigid">Rigid Sim</a> <span class="opt">optional</span></h3><p>Rigid-body simulation experiments on the VexelRay stack: spheres that collide, bounce, spin and roll, live on the GPU.</p></div></div>
+        </article>
+        <article class="app" id="app-maistro">
+          <div class="shot"><img class="big" src="img/maistro.png" alt=""></div>
+          <div class="app-body"><img src="img/maistro.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-maistro">Maistro</a> <span class="opt">optional</span></h3><p>A desktop client for Claude Code, on the VexelRay stack: the conversation beside a mind map its replies grow. Needs the Claude Code CLI, logged in.</p></div></div>
+        </article>
+        <article class="app" id="app-inspector">
+          <div class="shot"><img class="screen" src="img/inspector-screen.png" alt="VexelRay Inspector: the escapement at rest, replaying a calculator session, its park's budget on the plaque" loading="lazy"></div>
+          <div class="app-body"><img src="img/inspector.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-inspector">VexelRay Inspector</a> <span class="opt">optional</span></h3><p>DevTools for VexelRay applications, drawn as clockwork: attach to a running app and watch its frame loop beat, park and stall.</p></div></div>
         </article>
     </div>
     </div>
@@ -266,20 +275,27 @@
           <ul>
             <li>each application in its own folder under <code>%LOCALAPPDATA%\Programs</code></li>
             <li>desktop and Start menu shortcuts</li>
-            <li>your user <code>PATH</code>, so <code>vexplore</code>, <code>text-editor</code>, <code>pix</code>, <code>mainframe</code> and <code>calculator</code> work from a terminal</li>
+            <li>your user <code>PATH</code>, so <code>vexplore</code>, <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code>, <code>maistro</code> and <code>vexelray-inspector</code> work from a terminal</li>
             <li><em>Open with</em> entries for the file types Vex and Pix read. One becomes the default only for a type no other program has claimed: Windows does not let a new program take over an existing one, and neither does this</li>
             <li>an entry for each application in <em>Settings &rsaquo; Apps</em></li>
           </ul>
-          <p>To leave some of that out, set any of these in the same PowerShell window before the install line:</p>
+          <p>The window that opens has a box for each of these. To start them unticked, or to leave them out when the installer runs without a window, set any of these in the same PowerShell window before the install line:</p>
           <div class="cmd plain"><code id="opt-shortcuts">$env:INSTALL_NO_SHORTCUTS = '1'</code><button class="copy" type="button" data-copy="opt-shortcuts">Copy</button></div>
           <div class="cmd plain"><code id="opt-path">$env:INSTALL_NO_PATH = '1'</code><button class="copy" type="button" data-copy="opt-path">Copy</button></div>
           <div class="cmd plain"><code id="opt-assoc">$env:INSTALL_NO_ASSOCIATIONS = '1'</code><button class="copy" type="button" data-copy="opt-assoc">Copy</button></div>
         </details>
         <details id="only-some">
           <summary>Install only some of them</summary>
-          <p>Set <code>INSTALL_ONLY</code> in the same PowerShell window before the install line:</p>
+          <p>Untick the others in the window that opens. To choose ahead of it, or without a window, set <code>INSTALL_ONLY</code> in the same PowerShell window before the install line:</p>
           <div class="cmd plain"><code id="only">$env:INSTALL_ONLY = 'vexplore,text-editor'</code><button class="copy" type="button" data-copy="only">Copy</button></div>
-          <p>The ids are <code>vexplore</code>, <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code>, <code>fluid-sim</code> and <code>rigid-sim</code>.</p>
+          <p>The ids are <code>vexplore</code>, <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code>, <code>fluid-sim</code>, <code>rigid-sim</code>, <code>maistro</code> and <code>inspector</code>.</p>
+          <p>Fluid Sim, Rigid Sim, Maistro and VexelRay Inspector start unticked, and without the window they are left out unless already installed. Tick them to install them too, or name <code>fluid-sim</code>, <code>rigid-sim</code>, <code>maistro</code> and <code>inspector</code> in <code>INSTALL_ONLY</code>.</p>
+        </details>
+        <details id="everything">
+          <summary>Install everything, without being asked</summary>
+          <p>Run the script as a script block, which takes arguments, as the install line cannot:</p>
+          <div class="cmd plain"><code id="everything-cmd">&amp; ([scriptblock]::Create((irm https://sibarum.github.io/install.ps1))) --install-everything --do-not-prompt-me</code><button class="copy" type="button" data-copy="everything-cmd">Copy</button></div>
+          <p><code>--install-everything</code> installs every application, the optional ones too (<code>$env:INSTALL_EVERYTHING = '1'</code> does the same), and <code>--do-not-prompt-me</code> opens no window and asks nothing (as <code>$env:INSTALL_QUIET = '1'</code>). Either one works alone.</p>
         </details>
         <details id="update">
           <summary>Update</summary>
