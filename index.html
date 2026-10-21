@@ -5,9 +5,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VexelRay</title>
-<meta name="description" content="Nine desktop applications drawn live on the GPU, which know about each other. One line installs them all.">
+<meta name="description" content="Nine desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.">
 <meta property="og:title" content="VexelRay">
-<meta property="og:description" content="Nine desktop applications drawn live on the GPU, which know about each other. One line installs them all.">
+<meta property="og:description" content="Nine desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.">
 <link rel="icon" href="img/logo.svg">
 <style>
   :root {
@@ -63,6 +63,15 @@
   .facts { display: flex; flex-wrap: wrap; gap: 8px 22px; list-style: none; padding: 0; margin: 18px 0 0; font: 0.84rem var(--mono); color: var(--text); }
   .facts li::before { content: "\2713"; color: var(--lime); font-weight: 800; margin-right: 8px; }
   .notice { margin: 0 0 18px; background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--cyan); padding: 12px 16px; color: var(--text); }
+  .platforms { display: inline-flex; margin: 0 0 16px; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden; }
+  .platforms[hidden] { display: none; }
+  .platforms button { appearance: none; border: none; background: transparent; color: var(--muted); font: 700 0.86rem system-ui, sans-serif; padding: 8px 18px; cursor: pointer; }
+  .platforms button + button { border-left: 1px solid var(--line-2); }
+  .platforms button:hover { color: var(--text); }
+  .platforms button[aria-selected="true"] { background: var(--text); color: var(--bg); }
+  .platforms button:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+  .platform + .platform { margin-top: 32px; }
+  .downloads { display: flex; flex-wrap: wrap; gap: 12px; margin: 4px 0 0; }
   .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
   .ctas:empty { display: none; }
 
@@ -147,10 +156,12 @@
     <div class="wrap">
       <span class="badge">0.1.1 · experimental prerelease</span>
       <h1>VexelRay</h1>
-      <p class="tagline">Nine desktop applications drawn live on the GPU, which know about each other. One line installs them all.</p>
+      <p class="tagline">Nine desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.</p>
 
       <div class="install">
         <p class="notice" id="notice" hidden></p>
+        <div class="platforms" id="platforms" role="tablist" aria-label="Your system" hidden><button type="button" role="tab" data-platform="windows" aria-controls="get-windows">Windows</button><button type="button" role="tab" data-platform="linux" aria-controls="get-linux">Linux</button></div>
+        <div class="platform" id="get-windows">
         <p class="install-label"><strong>Windows:</strong> paste this into PowerShell and press <kbd>Enter</kbd></p>
         <div class="cmd"><code id="install-command">irm https://sibarum.github.io/install.ps1 | iex</code><button class="copy" type="button" data-copy="install-command">Copy</button></div>
         <p class="hint">To open PowerShell, press <kbd>Win</kbd> + <kbd>X</kbd> and choose <em>Terminal</em> (on Windows 10, <em>Windows PowerShell</em>). Running the same line again updates everything.</p>
@@ -161,6 +172,12 @@
           <li>Uninstall from Settings</li>
         </ul>
         <p class="hint">Needs Windows 10 or 11 (64-bit) and a graphics card with an up-to-date driver: everything here draws with Vulkan.</p>
+        </div>
+        <div class="platform" id="get-linux">
+        <p class="install-label"><strong>Linux:</strong> each application is a download of its own. There is no install line for Linux yet.</p>
+        <p class="downloads"><a class="button" href="https://github.com/sibarum/vexelray-dist/releases">Download for Linux</a><a class="button ghost" href="#linux">How to run them</a></p>
+        <p class="hint">Needs 64-bit (x86_64) Linux with an X11 desktop, or Wayland with XWayland, and a Vulkan driver: Mesa's, or your graphics card maker's. For now every window draws at 100%, whatever the desktop's scaling.</p>
+        </div>
       </div>
       <div class="ctas"><a class="button ghost" href="https://sibarum.github.io/technology.html">See what's inside the framework</a></div>
     </div>
@@ -230,7 +247,7 @@
       <div class="wrap">
       <div class="eyebrow">Developers</div>
       <h2 id="build-title">Build your own</h2>
-      <p class="lede">VexelRay is also a framework: Java 25, compiled to a native Windows executable and drawn with Vulkan. Every application above is built on it. Yours can be too, whether a coding agent writes most of it or you write all of it.</p>
+      <p class="lede">VexelRay is also a framework: Java 25, compiled to a native executable for Windows or Linux and drawn with Vulkan. Every application above is built on it. Yours can be too, whether a coding agent writes most of it or you write all of it.</p>
       <div class="cards">
         <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/getting-started.html">Start from the template</a></h3><p>One command generates a working application with tabs, a file navigator, settings that persist, and tests that build the window without a GPU. Vex, Calculator and MainFrame all started this way.</p></article>
         <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/developers/with-an-llm.html">Build it with an LLM</a></h3><p>The stack was written with Claude Code. The framework and the GUI carry a <code>CLAUDE.md</code> with the rules the code does not show, and every generated project starts with one. <code>ottermate</code> lets a coding agent drive and screenshot the window it built, so it checks its own work by looking at it.</p></article>
@@ -247,7 +264,7 @@
       <p class="lede">VexelRay would not exist without three pieces of other people's work, and we're grateful for each of them.</p>
       <div class="cards">
         <article class="card"><h3><a href="https://claude.com/claude-code">Claude Code, by Anthropic</a></h3><p>Most of VexelRay was written with Claude Code, Anthropic's coding agent, working alongside its author. Ottermate exists so Claude can see the windows it builds.</p></article>
-        <article class="card"><h3><a href="https://www.graalvm.org/">Oracle GraalVM</a></h3><p>Oracle GraalVM's Native Image compiles every application ahead of time into a single Windows executable that runs without a JVM.</p></article>
+        <article class="card"><h3><a href="https://www.graalvm.org/">Oracle GraalVM</a></h3><p>Oracle GraalVM's Native Image compiles every application ahead of time into a single native executable, for Windows or Linux, that runs without a JVM.</p></article>
         <article class="card"><h3><a href="https://www.vulkan.org/">Vulkan, by the Khronos Group</a></h3><p>Everything here is drawn with Vulkan, the open, cross-platform graphics and compute API from the Khronos Group, with every shader compiled to SPIR-V.</p></article>
       </div>
       <p class="action"><a class="button" href="https://sibarum.github.io/licenses.html">Licenses and notices</a></p>
@@ -313,6 +330,17 @@
           <p>Press <kbd>Win</kbd> + <kbd>R</kbd>, paste this, and press <kbd>Enter</kbd>:</p>
           <div class="cmd plain"><code id="run-command">powershell -NoExit -Command "irm https://sibarum.github.io/install.ps1 | iex"</code><button class="copy" type="button" data-copy="run-command">Copy</button></div>
         </details>
+        <details id="linux">
+          <summary>Run them on Linux</summary>
+          <p>Linux has no install line yet. The builds are on <a href="https://github.com/sibarum/vexelray-dist/releases">their download page</a>; from there:</p>
+          <ol>
+            <li>On the release of each application you want, download its Linux build, and unpack it if it is an archive.</li>
+            <li>Make the program executable and start it, for example <code>chmod +x vexplore</code> and then <code>./vexplore</code>.</li>
+            <li>If no window opens, check that a Vulkan driver is installed: <code>vulkaninfo --summary</code>, from your distribution's <code>vulkan-tools</code>, lists the graphics cards it can draw on.</li>
+            <li>To update, download the newer release and replace the old files. To remove an application, delete them.</li>
+          </ol>
+          <p>Needs 64-bit (x86_64) Linux with an X11 desktop, or Wayland with XWayland, and a Vulkan driver: Mesa's, or your graphics card maker's. For now every window draws at 100%, whatever the desktop's scaling.</p>
+        </details>
         <details id="feedback">
           <summary>Something went wrong, or you have feedback</summary>
           <p>Anything is useful: it did not install, a window looked wrong, something was confusing, or you just liked it. <a href="https://github.com/sibarum/vexelray-framework/issues/new">Open an issue</a> and say which application, what you did and what happened. A screenshot helps.</p>
@@ -324,7 +352,7 @@
 
 <footer>
   <div class="wrap"><p>Generated by vexelray-installer. Source of the installers: <a href="https://github.com/sibarum/vexelray-dist">sibarum/vexelray-dist</a>. &middot; <a href="https://sibarum.github.io/technology.html">Technology</a> &middot; <a href="https://sibarum.github.io/design.html">Design</a> &middot; <a href="https://sibarum.github.io/licenses.html">Licenses and notices</a></p>
-  <p class="legal">Claude and Claude Code are trademarks of Anthropic, PBC. Oracle, Java and GraalVM are trademarks or registered trademarks of Oracle and/or its affiliates. Vulkan and SPIR-V are trademarks or registered trademarks of The Khronos Group Inc. Windows and Direct3D are trademarks of the Microsoft group of companies. Other names may be trademarks of their respective owners. VexelRay is an independent project, not affiliated with or endorsed by any of them.</p></div>
+  <p class="legal">Claude and Claude Code are trademarks of Anthropic, PBC. Oracle, Java and GraalVM are trademarks or registered trademarks of Oracle and/or its affiliates. Vulkan and SPIR-V are trademarks or registered trademarks of The Khronos Group Inc. Windows and Direct3D are trademarks of the Microsoft group of companies. Linux is the registered trademark of Linus Torvalds in the U.S. and other countries. Other names may be trademarks of their respective owners. VexelRay is an independent project, not affiliated with or endorsed by any of them.</p></div>
 </footer>
 
 <script>
@@ -356,17 +384,49 @@
   var ua = navigator.userAgent.toLowerCase();
   var windows = platform.indexOf("win") === 0 || ua.indexOf("windows") !== -1;
   var mobile = /android|iphone|ipad|ipod/.test(ua) || (platform === "macintel" && navigator.maxTouchPoints > 1);
+  var linux = !windows && !mobile && (platform.indexOf("linux") !== -1 || ua.indexOf("linux") !== -1 || ua.indexOf("x11") !== -1);
   var notice = $("notice");
+  // With a Linux download as well, both ways in sit behind a switch that starts on the visitor's own system. Without
+  // script there is no switch, and both are shown one after the other.
+  var tabs = $("platforms");
+  if (tabs) {
+    var show = function (name) {
+      Array.prototype.forEach.call(tabs.querySelectorAll("button"), function (b) {
+        var on = b.getAttribute("data-platform") === name;
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;
+        $("get-" + b.getAttribute("data-platform")).hidden = !on;
+      });
+    };
+    Array.prototype.forEach.call(tabs.querySelectorAll("button"), function (b) {
+      b.addEventListener("click", function () { show(b.getAttribute("data-platform")); });
+      b.addEventListener("keydown", function (e) {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        var other = e.key === "ArrowRight" ? b.nextElementSibling : b.previousElementSibling;
+        if (other) { show(other.getAttribute("data-platform")); other.focus(); }
+      });
+    });
+    tabs.hidden = false;
+    show(linux || location.hash === "#get-linux" ? "linux" : "windows");
+  }
   if (mobile) {
-    notice.textContent = "These are Windows desktop applications. Open this page on a Windows PC to install them.";
+    notice.textContent = tabs
+        ? "These are desktop applications for Windows and Linux. Open this page on a computer to install them."
+        : "These are Windows desktop applications. Open this page on a Windows PC to install them.";
     notice.hidden = false;
-  } else if (!windows) {
-    notice.textContent = "These run on Windows only for now; macOS and Linux are not supported yet.";
+  } else if (!windows && !(linux && tabs)) {
+    notice.textContent = tabs
+        ? "These run on Windows and Linux for now; macOS is not supported yet."
+        : "These run on Windows only for now; macOS and Linux are not supported yet.";
     notice.hidden = false;
   }
 
-  var target = location.hash && document.querySelector("details" + location.hash);
-  if (target) target.open = true;
+  function openTarget() {
+    var target = /^#[\w-]+$/.test(location.hash) && document.querySelector("details" + location.hash);
+    if (target) target.open = true;
+  }
+  openTarget();
+  addEventListener("hashchange", openTarget);
 
   // The hero's backdrop: a field of points lit by drifting distance-field circles. It draws only while it is
   // on screen, and draws one still frame for anyone who asks for reduced motion.
