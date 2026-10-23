@@ -57,6 +57,7 @@
   .cmd code { flex: 1; min-width: 0; padding: 16px 18px; color: var(--text); font: 0.98rem/1.5 var(--mono); overflow-x: auto; white-space: pre; background: none; }
   .cmd code::before { content: "PS> "; color: var(--dim); }
   .cmd.plain code::before { content: none; }
+  #install-command-linux::before { content: "$ "; }
   .copy { appearance: none; border: none; background: var(--text); color: var(--bg); font: 800 0.9rem system-ui, sans-serif; padding: 0 22px; cursor: pointer; min-width: 92px; }
   .copy:hover { background: var(--cyan); }
   .hint { font-size: 0.88rem; color: var(--muted); margin: 12px 0 0; }
@@ -174,8 +175,15 @@
         <p class="hint">Needs Windows 10 or 11 (64-bit) and a graphics card with an up-to-date driver: everything here draws with Vulkan.</p>
         </div>
         <div class="platform" id="get-linux">
-        <p class="install-label"><strong>Linux:</strong> each application is a download of its own. There is no install line for Linux yet.</p>
-        <p class="downloads"><a class="button" href="https://github.com/sibarum/vexelray-dist/releases">Download for Linux</a><a class="button ghost" href="#linux">How to run them</a></p>
+        <p class="install-label"><strong>Linux:</strong> paste this into a terminal and press <kbd>Enter</kbd></p>
+        <div class="cmd"><code id="install-command-linux">curl -fsSL https://raw.githubusercontent.com/sibarum/vexelray-dist/main/preflight/install.sh | sh</code><button class="copy" type="button" data-copy="install-command-linux">Copy</button></div>
+        <p class="hint">No <code>sudo</code>: everything goes under <code>~/.local</code>, for your user. Running the same line again updates everything. These are snapshot builds, 0.1.2-SNAPSHOT, of Vex, Pix, MainFrame, Calculator and VexelRay Inspector; <a href="#linux">the rest are not on Linux yet</a>.</p>
+        <ul class="facts">
+          <li>No root</li>
+          <li>Your user only</li>
+          <li>Every download checked by SHA-256</li>
+          <li>Uninstall with one command</li>
+        </ul>
         <p class="hint">Needs 64-bit (x86_64) Linux with an X11 desktop, or Wayland with XWayland, and a Vulkan driver: Mesa's, or your graphics card maker's. For now every window draws at 100%, whatever the desktop's scaling.</p>
         </div>
       </div>
@@ -331,14 +339,20 @@
           <div class="cmd plain"><code id="run-command">powershell -NoExit -Command "irm https://sibarum.github.io/install.ps1 | iex"</code><button class="copy" type="button" data-copy="run-command">Copy</button></div>
         </details>
         <details id="linux">
-          <summary>Run them on Linux</summary>
-          <p>Linux has no install line yet. The builds are on <a href="https://github.com/sibarum/vexelray-dist/releases">their download page</a>; from there:</p>
-          <ol>
-            <li>On the release of each application you want, download its Linux build, and unpack it if it is an archive.</li>
-            <li>Make the program executable and start it, for example <code>chmod +x vexplore</code> and then <code>./vexplore</code>.</li>
-            <li>If no window opens, check that a Vulkan driver is installed: <code>vulkaninfo --summary</code>, from your distribution's <code>vulkan-tools</code>, lists the graphics cards it can draw on.</li>
-            <li>To update, download the newer release and replace the old files. To remove an application, delete them.</li>
-          </ol>
+          <summary>On Linux</summary>
+          <p>The line runs one script, <a href="https://raw.githubusercontent.com/sibarum/vexelray-dist/main/preflight/install.sh">install.sh</a>. Like the Windows one, it runs each application's own installer once its SHA-256 matches the application's manifest, and that installer checks every download the same way. Nothing needs root, and everything is undone by uninstalling:</p>
+          <ul>
+            <li>each application in its own folder under <code>~/.local/opt</code></li>
+            <li>entries in your applications menu, and launchers on your desktop if you have a Desktop folder</li>
+            <li>links in <code>~/.local/bin</code>, so <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code> and <code>vexelray-inspector</code> run from a terminal; a link is never put over a file that is not its own</li>
+            <li>file types Vex and Pix open, under <em>Open With</em>; one becomes the default only where no program is</li>
+          </ul>
+          <p>For now Linux gets snapshot builds (0.1.2-SNAPSHOT), built from the same sources as the next release, until Windows, Linux and macOS ship together. Vexplore, Fluid Sim, Rigid Sim and Maistro have no Linux version yet.</p>
+          <p>Options go between the pipe and <code>sh</code>. Only some of the applications:</p>
+          <div class="cmd plain"><code id="linux-only">curl -fsSL https://raw.githubusercontent.com/sibarum/vexelray-dist/main/preflight/install.sh | INSTALL_ONLY=text-editor,pix sh</code><button class="copy" type="button" data-copy="linux-only">Copy</button></div>
+          <p><code>INSTALL_NO_SHORTCUTS=1</code>, <code>INSTALL_NO_PATH=1</code> and <code>INSTALL_NO_ASSOCIATIONS=1</code> leave those out the same way. Run the line again to update. To remove everything:</p>
+          <div class="cmd plain"><code id="linux-uninstall">"$HOME/.local/opt/text-editor/uninstall.sh" --all</code><button class="copy" type="button" data-copy="linux-uninstall">Copy</button></div>
+          <p>If no window opens, check that a Vulkan driver is installed: <code>vulkaninfo --summary</code>, from your distribution's <code>vulkan-tools</code>, lists the graphics cards it can draw on.</p>
           <p>Needs 64-bit (x86_64) Linux with an X11 desktop, or Wayland with XWayland, and a Vulkan driver: Mesa's, or your graphics card maker's. For now every window draws at 100%, whatever the desktop's scaling.</p>
         </details>
         <details id="feedback">
