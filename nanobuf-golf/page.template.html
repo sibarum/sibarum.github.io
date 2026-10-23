@@ -173,7 +173,7 @@
         <li>Refuses another schema, a schema that is a prefix of the real one, another major version, a file at major 11 when asked for 1, an empty file, and a file in nanobuf version 2.</li>
         <li>Writes a file byte for byte identical to the reference's, and refuses <code>0x1E</code>, <code>0x1F</code> and NUL without writing anything. C strings can't hold NUL, so C skips that last case and runs 17.</li>
       </ul>
-      <p class="note">The truncated-record case is the one addition to <a href="https://github.com/sibarum/intrabuf/blob/main/intrabuf-nanobuf/src/test/java/sibarum/intrabuf/nanobuf/NanobufLineTest.java">intrabuf's own cases</a>. The spec asks for it and intrabuf's suite doesn't check it. Two of the shell lines don't pass it yet: <code>read.sh</code> and <code>read.ps1</code> hand the truncated record over as a row. <code>read.bash</code> ignores it.</p>
+      <p class="note">The truncated-record case is the one addition to <a href="https://github.com/sibarum/intrabuf/blob/main/intrabuf-nanobuf/src/test/java/sibarum/intrabuf/nanobuf/NanobufLineTest.java">intrabuf's own cases</a>, which the spec asks for. intrabuf's suite now checks it too, and every shell line passes it.</p>
     </div>
   </section>
 
