@@ -1,0 +1,1 @@
+fn nbw(p:&str,f:&[&str])->Option<()>{if f.concat().contains(['\0','\x1e','\x1f']){return None}std::io::Write::write_all(&mut std::fs::File::options().append(true).create(true).open(p).ok()?,(f.join("\x1f")+"\x1e\n").as_bytes()).ok()}

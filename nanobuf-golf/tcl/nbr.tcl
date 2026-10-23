@@ -1,0 +1,1 @@
+proc nbr {p s m} {set f [open $p rb];foreach {- x} [regexp -all -inline {\r?\n?([^\x1e]*)\x1e} [read $f]] {lappend r [split $x \x1f]};close $f;set r [lassign $r h];if {[lrange $h 0 2] ne [list nanobuf 1 $s]||![string match $m.* [lindex $h 3].]} {error n};set r}

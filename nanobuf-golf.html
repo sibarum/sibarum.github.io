@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nanobuf Golf</title>
+<meta name="description" content="Nanobuf's reader and writer fit one line of a shell. How short can they get in other languages? Every entry is held to the same test cases.">
+<meta property="og:title" content="Nanobuf Golf">
+<meta property="og:description" content="Nanobuf's reader and writer fit one line of a shell. How short can they get in other languages? Every entry is held to the same test cases.">
+<link rel="icon" href="img/logo.svg">
+<style>
+  :root {
+    --bg: #050608;
+    --bg-2: #0b0d12;
+    --panel: #10131a;
+    --line: #1f2430;
+    --line-2: #2c3342;
+    --text: #f2f4f8;
+    --muted: #9aa3b5;
+    --dim: #5f6879;
+    --blue: #2563eb;
+    --cyan: #3ee0ff;
+    --violet: #8b5cf6;
+    --grad: linear-gradient(100deg, var(--cyan), var(--blue) 55%, var(--violet));
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+  a { color: var(--cyan); }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  .top { position: sticky; top: 0; z-index: 10; background: rgba(5, 6, 8, 0.78); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; min-height: 56px; max-width: 1200px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; font-size: 0.95rem; }
+  .brand img { width: 26px; height: 26px; }
+  .top nav { margin-left: auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; font-size: 0.88rem; padding: 8px 0; }
+  .top nav a { color: var(--muted); text-decoration: none; }
+  .top nav a:hover { color: var(--text); }
+  @media (max-width: 560px) {
+    .top .wrap { flex-wrap: wrap; }
+    .top nav { margin-left: 0; justify-content: flex-start; padding-top: 0; }
+  }
+
+  header.page { padding: clamp(48px, 8vw, 88px) 0 32px; }
+  .eyebrow { font: 700 0.78rem/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); }
+  h1 { font-size: clamp(2.4rem, 7vw, 4.4rem); line-height: 0.95; letter-spacing: -0.045em; font-weight: 900; margin: 18px 0 16px; }
+  .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { color: var(--muted); font-size: 1.08rem; max-width: 62ch; margin: 0; }
+
+  section { padding: 40px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); letter-spacing: -0.03em; font-weight: 900; margin: 12px 0 10px; }
+  h3 { font-size: 1.25rem; letter-spacing: -0.02em; font-weight: 800; margin: 0; }
+  section > .wrap > p, section > .wrap > ul { color: var(--muted); max-width: 70ch; }
+  section > .wrap > ul { padding-left: 1.2em; }
+  section > .wrap > ul li { margin: 4px 0; }
+  code { font: 0.88em var(--mono); color: #d7e3ff; background: rgba(62, 224, 255, 0.08); padding: 1px 5px; border-radius: 3px; }
+  .note { margin-top: 18px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--cyan); color: var(--muted); font-size: 0.92rem; max-width: 72ch; }
+
+  /* leaderboard */
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 18px; }
+  th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  thead th { font: 700 0.7rem var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); border-bottom-color: var(--line-2); }
+  tbody th { font-weight: 700; color: var(--text); white-space: nowrap; }
+  tbody th a { color: var(--text); text-decoration: none; }
+  tbody th a:hover { color: var(--cyan); }
+  td.n { font: 0.9rem var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); text-align: right; white-space: nowrap; }
+  td.n b { color: var(--text); }
+  thead th.n { text-align: right; }
+  td.bar { width: 42%; }
+  .bars { display: flex; height: 12px; border-radius: 2px; overflow: hidden; }
+  .bars i { display: block; height: 100%; }
+  .bars .r { background: var(--cyan); width: calc(var(--r) / 700 * 100%); }
+  .bars .w { background: var(--violet); width: calc(var(--w) / 700 * 100%); }
+  tr.shell th, tr.shell td { color: var(--dim); }
+  tr.shell th a { color: var(--muted); }
+  .tag { font: 700 0.62rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); border: 1px solid var(--line-2); border-radius: 99px; padding: 1px 7px; margin-left: 6px; vertical-align: 2px; }
+  .key { display: flex; gap: 18px; font-size: 0.82rem; color: var(--dim); margin-top: 10px; }
+  .key span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .key .kr::before { background: var(--cyan); }
+  .key .kw::before { background: var(--violet); }
+  @media (max-width: 640px) {
+    td.bar { display: none; }
+    th, td { padding: 9px 6px; }
+  }
+
+  /* entries */
+  .entry { padding: 28px 0; border-top: 1px solid var(--line); }
+  .entry:first-of-type { border-top: none; }
+  .entry-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-bottom: 8px; }
+  .entry-head .total { font: 700 0.85rem var(--mono); color: var(--cyan); }
+  .entry p { color: var(--muted); margin: 6px 0; max-width: 72ch; font-size: 0.95rem; }
+  .entry dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 12px 0 0; font-size: 0.88rem; }
+  .entry dt { color: var(--dim); font: 700 0.7rem/1.9 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; }
+  .entry dd { margin: 0; color: var(--muted); }
+  @media (max-width: 560px) { .entry dl { grid-template-columns: 1fr; } .entry dd { margin-bottom: 6px; } }
+  .line { position: relative; margin: 12px 0 0; background: var(--panel); border: 1px solid var(--line-2); border-radius: 6px; }
+  .line-label { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 7px 12px; border-bottom: 1px solid var(--line); font: 700 0.7rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+  .line-label b { color: var(--text); letter-spacing: 0; }
+  .copy { font: 700 0.68rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--line-2); border-radius: 3px; padding: 3px 8px; cursor: pointer; }
+  .copy:hover { color: var(--text); border-color: var(--cyan); }
+  .line pre { margin: 0; padding: 12px; font: 0.82rem/1.55 var(--mono); color: #d7e3ff; white-space: pre-wrap; word-break: break-all; }
+  pre.cmd { margin: 12px 0; padding: 12px; background: var(--panel); border: 1px solid var(--line-2); border-radius: 6px; font: 0.85rem/1.6 var(--mono); color: #d7e3ff; overflow-x: auto; max-width: 70ch; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 0.84rem; color: var(--dim); }
+  footer a { color: var(--muted); }
+  footer p { margin: 0 0 10px; max-width: 90ch; }
+  a:focus-visible, .copy:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+  /* Code golf shows every character as typed: no ligatures turning >= into one glyph. Last, and as specific as the
+     rules above, because their font shorthands reset it. */
+  code, .line pre, pre.cmd { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="img/logo.svg" alt="">VexelRay</a>
+    <nav aria-label="Links">
+      <a href="./#apps">Applications</a>
+      <a href="https://sibarum.github.io/technology.html">Technology</a>
+      <a href="https://sibarum.github.io/design.html">Design</a>
+      <a href="https://sibarum.github.io/vexelray-framework/">Framework</a>
+      <a href="https://sibarum.github.io/vexelray-framework/developers/">Developers</a>
+      <a href="https://github.com/sibarum/vexelray-framework">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <header class="page">
+    <div class="wrap">
+      <div class="eyebrow">Nanobuf &middot; code golf</div>
+      <h1>Nanobuf, <span class="grad">golfed.</span></h1>
+      <p class="lede"><a href="https://github.com/sibarum/intrabuf/blob/main/docs/nanobuf.md">Nanobuf</a> is a serialization format built so that its reader and its writer each fit on one line of a shell. This page asks the obvious next question: how short can they get in other languages? Every entry here passes the same test cases, and fewer bytes wins.</p>
+    </div>
+  </header>
+
+  <section id="board" aria-labelledby="board-title">
+    <div class="wrap">
+      <div class="eyebrow">Leaderboard</div>
+      <h2 id="board-title">Bytes for a reader and a writer</h2>
+      <p>Each count is the UTF-8 length of the entry's one line. The lines marked <span class="tag">intrabuf</span> are the shell lines that ship in <a href="https://github.com/sibarum/intrabuf/tree/main/intrabuf-nanobuf">intrabuf-nanobuf</a>. They are written to be used rather than to win: they print an error message, which golf entries may skip. They are tested by intrabuf's own suite, not by the harness on this page.</p>
+      <table>
+        <thead><tr><th scope="col">Language</th><th scope="col" class="n">Read</th><th scope="col" class="n">Write</th><th scope="col" class="n">Total</th><th scope="col"><span class="sr">Share</span></th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><a href="#perl">Perl</a></th><td class="n">141</td><td class="n">88</td><td class="n"><b>229</b></td><td class="bar"><div class="bars" style="--r:141;--w:88" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr><th scope="row"><a href="#jscript">JScript .NET</a></th><td class="n">229</td><td class="n">117</td><td class="n"><b>346</b></td><td class="bar"><div class="bars" style="--r:229;--w:117" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr><th scope="row"><a href="#tcl">Tcl</a></th><td class="n">261</td><td class="n">129</td><td class="n"><b>390</b></td><td class="bar"><div class="bars" style="--r:261;--w:129" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr><th scope="row"><a href="#csharp">C#</a></th><td class="n">273</td><td class="n">158</td><td class="n"><b>431</b></td><td class="bar"><div class="bars" style="--r:273;--w:158" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr class="shell"><th scope="row"><a href="https://github.com/sibarum/intrabuf/tree/main/intrabuf-nanobuf">sh</a><span class="tag">intrabuf</span></th><td class="n">241</td><td class="n">193</td><td class="n"><b>434</b></td><td class="bar"><div class="bars" style="--r:241;--w:193" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr class="shell"><th scope="row"><a href="https://github.com/sibarum/intrabuf/tree/main/intrabuf-nanobuf">Bash</a><span class="tag">intrabuf</span></th><td class="n">294</td><td class="n">176</td><td class="n"><b>470</b></td><td class="bar"><div class="bars" style="--r:294;--w:176" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr><th scope="row"><a href="#vb">VB.NET</a></th><td class="n">343</td><td class="n">173</td><td class="n"><b>516</b></td><td class="bar"><div class="bars" style="--r:343;--w:173" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr><th scope="row"><a href="#java">Java</a></th><td class="n">338</td><td class="n">182</td><td class="n"><b>520</b></td><td class="bar"><div class="bars" style="--r:338;--w:182" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr><th scope="row"><a href="#rust">Rust</a></th><td class="n">379</td><td class="n">233</td><td class="n"><b>612</b></td><td class="bar"><div class="bars" style="--r:379;--w:233" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr class="shell"><th scope="row"><a href="https://github.com/sibarum/intrabuf/tree/main/intrabuf-nanobuf">PowerShell</a><span class="tag">intrabuf</span></th><td class="n">346</td><td class="n">326</td><td class="n"><b>672</b></td><td class="bar"><div class="bars" style="--r:346;--w:326" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+          <tr><th scope="row"><a href="#c">C</a></th><td class="n">484</td><td class="n">199</td><td class="n"><b>683</b></td><td class="bar"><div class="bars" style="--r:484;--w:199" aria-hidden="true"><i class="r"></i><i class="w"></i></div></td></tr>
+        </tbody>
+      </table>
+      <div class="key"><span class="kr">reader</span><span class="kw">writer</span></div>
+    </div>
+  </section>
+
+  <section id="rules" aria-labelledby="rules-title">
+    <div class="wrap">
+      <div class="eyebrow">Rules</div>
+      <h2 id="rules-title">What an entry has to do</h2>
+      <p>An entry is two lines: a <b>reader</b> and a <b>writer</b>, each a function (or the language's closest equivalent) that someone could paste into a program.</p>
+      <ul>
+        <li><b>The reader</b> takes a path, a schema name and a major version. It hands over every row after the header, kind first, by returning them or by calling a function once per row. It <em>refuses</em> a file whose header names another format version, another schema or another major version, and a file with no header. Fields are UTF-8 text, or bytes that are UTF-8.</li>
+        <li><b>The writer</b> takes a path and a row's fields. It appends one record to the file: the fields joined by <code>0x1F</code>, then <code>0x1E</code> and a line feed, in UTF-8 with no byte order mark. It refuses a field that contains <code>0x1E</code>, <code>0x1F</code> or NUL, and then writes nothing.</li>
+        <li><b>Refusing</b> means any failure the caller can catch: an exception, <code>die</code>, a Tcl error, <code>None</code> or <code>Nothing</code>, or a non-zero result. The entry doesn't have to print a message.</li>
+        <li><b>The count</b> is the UTF-8 length of the line. Imports, <code>using</code>s and <code>#include</code>s that a file of that language normally opens with are listed under each entry and not counted. Everything else is.</li>
+        <li><b>A missing field reads as empty</b>, so a reader may drop empty fields at the end of a row. Perl's <code>split</code> does that for free.</li>
+      </ul>
+      <p>Every entry runs against these 18 cases. Each language's line goes into a small driver that the harness builds and runs as its own program:</p>
+      <ul>
+        <li>Reads what the reference writes. The rows include empty fields, empty trailing fields, tabs, line breaks inside values (CR LF among them), a value that starts with a line break, a lone CR, non-ASCII text, every shell's special characters, a row with only a kind and a row with thirteen fields.</li>
+        <li>Reads the same file without its final line feed; with CR LF, a lone CR, or nothing at all after every record; and after Git's line-ending conversion, which turns every LF into CR LF, inside values too.</li>
+        <li>Reads a header with no rows, and <b>ignores a truncated final record</b>: whatever follows the last <code>0x1E</code> is not a record.</li>
+        <li>Refuses another schema, a schema that is a prefix of the real one, another major version, a file at major 11 when asked for 1, an empty file, and a file in nanobuf version 2.</li>
+        <li>Writes a file byte for byte identical to the reference's, and refuses <code>0x1E</code>, <code>0x1F</code> and NUL without writing anything. C strings can't hold NUL, so C skips that last case and runs 17.</li>
+      </ul>
+      <p class="note">The truncated-record case is the one addition to <a href="https://github.com/sibarum/intrabuf/blob/main/intrabuf-nanobuf/src/test/java/sibarum/intrabuf/nanobuf/NanobufLineTest.java">intrabuf's own cases</a>. The spec asks for it and intrabuf's suite doesn't check it. Two of the shell lines don't pass it yet: <code>read.sh</code> and <code>read.ps1</code> hand the truncated record over as a row. <code>read.bash</code> ignores it.</p>
+    </div>
+  </section>
+
+  <section id="entries" aria-labelledby="entries-title">
+    <div class="wrap">
+      <div class="eyebrow">Entries</div>
+      <h2 id="entries-title">The lines</h2>
+      <p>Shortest first. Each line is shown wrapped to fit, but it is one line. Copy takes it exactly.</p>
+
+      <article class="entry" id="perl">
+        <div class="entry-head"><h3>Perl</h3><span class="total">229 bytes</span></div>
+        <p>One regex with <code>/g</code> picks out every record that ends in <code>0x1E</code> and eats the line break in front of it, so a truncated tail never matches. The header is checked as a regex on the raw record, where <code>\c_</code> is <code>0x1F</code>. The writer checks all the fields at once by testing <code>"@_"</code>, the fields joined with spaces.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>141 bytes</b></span><button class="copy" type="button" data-for="perl-r">Copy</button></div><pre id="perl-r">sub nbr{local$/;open F,'&lt;:raw',$_[0];($h,@r)=&lt;F&gt;=~/\r?\n?(.*?)\36/gs;$h=~/^nanobuf\c_1\c_\Q$_[1]\E\c_$_[2](\.|\c_|$)/?map[split/\37/],@r:die}</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>88 bytes</b></span><button class="copy" type="button" data-for="perl-w">Copy</button></div><pre id="perl-w">sub nbw{&quot;@_&quot;=~/[\0\36\37]/&amp;&amp;die;open my$f,'&gt;&gt;:raw',shift;print$f join(&quot;\37&quot;,@_),&quot;\36\n&quot;}</pre></div>
+        <dl><dt>Use</dt><dd><code>nbr(PATH, SCHEMA, MAJOR)</code> returns the rows as array references; <code>nbw(PATH, FIELD, ...)</code> appends one. Both <code>die</code> to refuse.</dd><dt>Needs</dt><dd>Nothing.</dd><dt>Tested with</dt><dd>Perl 5.42 (Git for Windows)</dd></dl>
+      </article>
+
+      <article class="entry" id="jscript">
+        <div class="entry-head"><h3>JScript .NET</h3><span class="total">346 bytes</span></div>
+        <p>ECMAScript 3 with the .NET library behind it: a regex <code>exec</code> loop does what Perl's <code>/g</code> does, and <code>File.AppendAllText</code> already writes UTF-8 without a byte order mark.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>229 bytes</b></span><button class="copy" type="button" data-for="jscript-r">Copy</button></div><pre id="jscript-r">function nbr(p,s,m){var r=[],t=System.IO.File.ReadAllText(p),x=/\r?\n?([^\x1e]*)\x1e/g,a;while(a=x.exec(t))r.push(a[1].split('\x1f'));var h=r.shift();if(h[0]!='nanobuf'||h[1]!='1'||h[2]!=s||h[3].split('.')[0]!=m)throw 0;return r}</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>117 bytes</b></span><button class="copy" type="button" data-for="jscript-w">Copy</button></div><pre id="jscript-w">function nbw(p,f){if(/[\0\x1e\x1f]/.test(f.join('')))throw 0;System.IO.File.AppendAllText(p,f.join('\x1f')+'\x1e\n')}</pre></div>
+        <dl><dt>Use</dt><dd><code>nbr(path, schema, major)</code> returns an array of rows; <code>nbw(path, fields)</code> takes the fields as an array. Both <code>throw</code> to refuse.</dd><dt>Needs</dt><dd>Nothing. The lines name <code>System.IO.File</code> in full.</dd><dt>Tested with</dt><dd>jsc 14.0 (.NET Framework 4.8)</dd></dl>
+      </article>
+
+      <article class="entry" id="tcl">
+        <div class="entry-head"><h3>Tcl</h3><span class="total">390 bytes</span></div>
+        <p>Opens the file in binary, so fields come back as the file's bytes. <code>regexp -all -inline</code> finds the records, <code>lassign</code> splits off the header, and <code>string match $m.*</code> on the version with a <code>.</code> appended accepts <code>1</code> and <code>1.2</code> but not <code>11</code>.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>261 bytes</b></span><button class="copy" type="button" data-for="tcl-r">Copy</button></div><pre id="tcl-r">proc nbr {p s m} {set f [open $p rb];foreach {- x} [regexp -all -inline {\r?\n?([^\x1e]*)\x1e} [read $f]] {lappend r [split $x \x1f]};close $f;set r [lassign $r h];if {[lrange $h 0 2] ne [list nanobuf 1 $s]||![string match $m.* [lindex $h 3].]} {error n};set r}</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>129 bytes</b></span><button class="copy" type="button" data-for="tcl-w">Copy</button></div><pre id="tcl-w">proc nbw {p args} {if {[regexp {[\0\x1e\x1f]} [join $args]]} {error n};set f [open $p ab];puts $f [join $args \x1f]\x1e;close $f}</pre></div>
+        <dl><dt>Use</dt><dd><code>nbr path schema major</code> returns a list of rows; <code>nbw path field ...</code> appends one. Both raise an error to refuse.</dd><dt>Needs</dt><dd>Nothing.</dd><dt>Tested with</dt><dd>Tcl 8.6.18</dd></dl>
+      </article>
+
+      <article class="entry" id="csharp">
+        <div class="entry-head"><h3>C#</h3><span class="total">431 bytes</span></div>
+        <p><code>GetRange(1, Count - 2)</code> drops the header and whatever follows the last <code>0x1E</code> in one call, and throws on a file with no <code>0x1E</code> at all. <code>throw null</code> is the shortest throw C# has.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>273 bytes</b></span><button class="copy" type="button" data-for="csharp-r">Copy</button></div><pre id="csharp-r">static List&lt;string[]&gt;nbr(string p,string s,string m){var r=File.ReadAllText(p).Split('\x1e').Select(x=&gt;Regex.Replace(x,&quot;^\r?\n?&quot;,&quot;&quot;).Split('\x1f')).ToList();var h=r[0];if(h[0]!=&quot;nanobuf&quot;||h[1]!=&quot;1&quot;||h[2]!=s||h[3].Split('.')[0]!=m)throw null;return r.GetRange(1,r.Count-2);}</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>158 bytes</b></span><button class="copy" type="button" data-for="csharp-w">Copy</button></div><pre id="csharp-w">static void nbw(string p,params string[]f){if(Regex.IsMatch(string.Concat(f),&quot;[\0\x1e\x1f]&quot;))throw null;File.AppendAllText(p,string.Join(&quot;\x1f&quot;,f)+&quot;\x1e\n&quot;);}</pre></div>
+        <dl><dt>Use</dt><dd><code>static List&lt;string[]&gt; nbr(path, schema, major)</code>; <code>static void nbw(path, params string[] fields)</code>. Both throw to refuse.</dd><dt>Needs</dt><dd><code>using System.Collections.Generic; using System.IO; using System.Linq; using System.Text.RegularExpressions;</code></dd><dt>Tested with</dt><dd>C# 5 (csc 4.8, .NET Framework)</dd></dl>
+      </article>
+
+      <article class="entry" id="vb">
+        <div class="entry-head"><h3>VB.NET</h3><span class="total">516 bytes</span></div>
+        <p>VB won't put a method's body on the same line as its declaration, so both lines are delegates holding a one-expression lambda. The reader binds its variables with a LINQ query's <code>Let</code> over a one-element array.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>343 bytes</b></span><button class="copy" type="button" data-for="vb-r">Copy</button></div><pre id="vb-r">Dim nbr As Func(Of String,String,String,List(Of String()))=Function(p,s,m)(From t In{File.ReadAllText(p)}Let r=Regex.Matches(t,&quot;\r?\n?([^\x1e]*)\x1e&quot;).Cast(Of Match).Select(Function(x)x.Groups(1).Value.Split(ChrW(31))).ToList(),h=r(0)Select If(h(0)=&quot;nanobuf&quot;And h(1)=&quot;1&quot;And h(2)=s And h(3).Split(&quot;.&quot;c)(0)=m,r.Skip(1).ToList(),Nothing)).First()</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>173 bytes</b></span><button class="copy" type="button" data-for="vb-w">Copy</button></div><pre id="vb-w">Dim nbw As Action(Of String,String())=Sub(p,f)If Regex.IsMatch(Join(f,&quot;&quot;),&quot;[\x00\x1e\x1f]&quot;)Then Throw New Exception Else File.AppendAllText(p,Join(f,ChrW(31))&amp;ChrW(30)&amp;vbLf)</pre></div>
+        <dl><dt>Use</dt><dd><code>nbr(path, schema, major)</code> returns a <code>List(Of String())</code>, or <code>Nothing</code> to refuse; <code>nbw(path, fields)</code> takes an array and throws to refuse.</dd><dt>Needs</dt><dd><code>Imports System.Collections.Generic, System.IO, System.Linq, System.Text.RegularExpressions</code></dd><dt>Tested with</dt><dd>Visual Basic 2012 (vbc 14.8, .NET Framework)</dd></dl>
+      </article>
+
+      <article class="entry" id="java">
+        <div class="entry-head"><h3>Java</h3><span class="total">520 bytes</span></div>
+        <p>A compact source file needs no class and no imports. <code>Matcher.results()</code> streams the records, the header is matched as one regex with the schema quoted, and <code>throw null</code> refuses.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>338 bytes</b></span><button class="copy" type="button" data-for="java-r">Copy</button></div><pre id="java-r">List&lt;String[]&gt;nbr(String p,String s,String m)throws Exception{var r=new ArrayList&lt;&gt;(Pattern.compile(&quot;\r?\n?([^\36]*)\36&quot;).matcher(Files.readString(Path.of(p))).results().map(x-&gt;x.group(1).split(&quot;\37&quot;)).toList());if(!String.join(&quot;\37&quot;,r.remove(0)).matches(&quot;(?s)nanobuf\0371\37&quot;+Pattern.quote(s)+&quot;\37&quot;+m+&quot;([.\37].*)?&quot;))throw null;return r;}</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>182 bytes</b></span><button class="copy" type="button" data-for="java-w">Copy</button></div><pre id="java-w">void nbw(String p,String...f)throws Exception{if(String.join(&quot;&quot;,f).matches(&quot;(?s).*[\0\36\37].*&quot;))throw null;try(var w=new FileWriter(p,true)){w.write(String.join(&quot;\37&quot;,f)+&quot;\36\n&quot;);}}</pre></div>
+        <dl><dt>Use</dt><dd><code>List&lt;String[]&gt; nbr(String path, String schema, String major)</code>; <code>void nbw(String path, String... fields)</code>. Both throw to refuse.</dd><dt>Needs</dt><dd>Nothing: they are top-level methods in a compact source file, which imports all of <code>java.base</code> by itself.</dd><dt>Tested with</dt><dd>Java 25 (GraalVM 25.0.3)</dd></dl>
+      </article>
+
+      <article class="entry" id="rust">
+        <div class="entry-head"><h3>Rust</h3><span class="total">612 bytes</span></div>
+        <p><code>rsplit_once</code> drops what follows the last <code>0x1E</code>, and its <code>?</code> refuses a file with none. Slices of <code>String</code> compare directly with an array of <code>&amp;str</code>.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>379 bytes</b></span><button class="copy" type="button" data-for="rust-r">Copy</button></div><pre id="rust-r">fn nbr(p:&amp;str,s:&amp;str,m:&amp;str)-&gt;Option&lt;Vec&lt;Vec&lt;String&gt;&gt;&gt;{let t=std::fs::read_to_string(p).ok()?;let mut i=t.rsplit_once('\x1e')?.0.split('\x1e').map(|x|x.strip_prefix(&quot;\r\n&quot;).or(x.strip_prefix(['\r','\n'])).unwrap_or(x).split('\x1f').map(String::from).collect::&lt;Vec&lt;_&gt;&gt;());let h=i.next()?;(h.len()&gt;3&amp;&amp;h[..3]==[&quot;nanobuf&quot;,&quot;1&quot;,s]&amp;&amp;h[3].split('.').next()==Some(m)).then(||i.collect())}</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>233 bytes</b></span><button class="copy" type="button" data-for="rust-w">Copy</button></div><pre id="rust-w">fn nbw(p:&amp;str,f:&amp;[&amp;str])-&gt;Option&lt;()&gt;{if f.concat().contains(['\0','\x1e','\x1f']){return None}std::io::Write::write_all(&amp;mut std::fs::File::options().append(true).create(true).open(p).ok()?,(f.join(&quot;\x1f&quot;)+&quot;\x1e\n&quot;).as_bytes()).ok()}</pre></div>
+        <dl><dt>Use</dt><dd><code>fn nbr(&amp;str, &amp;str, &amp;str) -&gt; Option&lt;Vec&lt;Vec&lt;String&gt;&gt;&gt;</code>; <code>fn nbw(&amp;str, &amp;[&amp;str]) -&gt; Option&lt;()&gt;</code>. <code>None</code> refuses.</dd><dt>Needs</dt><dd>Nothing.</dd><dt>Tested with</dt><dd>Rust 1.98.1</dd></dl>
+      </article>
+
+      <article class="entry" id="c">
+        <div class="entry-head"><h3>C</h3><span class="total">683 bytes</span></div>
+        <p>Reads the whole file, then splits it in place in one pass, writing a NUL over each separator. The fields are pointers into that one buffer, freed when the reading is done.</p>
+        <div class="line"><div class="line-label"><span>Reader &middot; <b>484 bytes</b></span><button class="copy" type="button" data-for="c-r">Copy</button></div><pre id="c-r">int nbr(char*p,char*s,char*m,void(*g)(int,char**)){FILE*F=fopen(p,&quot;rb&quot;);if(!F)return 1;fseek(F,0,2);long n=ftell(F),h=0,c,l=strlen(m);char*b=malloc(n+1),*r=b,*e,**v=malloc(8*n+8);rewind(F);fread(b,1,n,F);fclose(F);for(;h&gt;=0&amp;&amp;(e=memchr(r,30,b+n-r));r=e+1){*e=0;r+=*r==13;r+=*r==10;for(c=1,*v=r;r&lt;e;r++)if(*r==31)*r=0,v[c++]=r+1;if(h)g(c,v);else h=c&gt;3&amp;&amp;!strcmp(*v,&quot;nanobuf&quot;)&amp;&amp;!strcmp(v[1],&quot;1&quot;)&amp;&amp;!strcmp(v[2],s)&amp;&amp;!strncmp(v[3],m,l)&amp;&amp;strchr(&quot;.&quot;,v[3][l])?1:-1;}free(b);free(v);return h&lt;1;}</pre></div>
+        <div class="line"><div class="line-label"><span>Writer &middot; <b>199 bytes</b></span><button class="copy" type="button" data-for="c-w">Copy</button></div><pre id="c-w">int nbw(char*p,int c,char**f){int i=0;for(;i&lt;c;i++)if(strpbrk(f[i],&quot;\36\37&quot;))return 1;FILE*F=fopen(p,&quot;ab&quot;);if(!F)return 1;for(i=0;i&lt;c;i++)fprintf(F,&quot;%s%s&quot;,f[i],i&lt;c-1?&quot;\37&quot;:&quot;\36\n&quot;);return fclose(F);}</pre></div>
+        <dl><dt>Use</dt><dd><code>int nbr(path, schema, major, void (*row)(int n, char **fields))</code> calls <code>row</code> for each row, like the shell lines; <code>int nbw(path, int n, char **fields)</code>. Both return non-zero to refuse.</dd><dt>Needs</dt><dd><code>#include &lt;stdio.h&gt;</code>, <code>&lt;stdlib.h&gt;</code> and <code>&lt;string.h&gt;</code></dd><dt>Tested with</dt><dd>MSVC 19.51 (Visual Studio 18)</dd></dl>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="run" aria-labelledby="run-title">
+    <div class="wrap">
+      <div class="eyebrow">Try it</div>
+      <h2 id="run-title">Run the harness, or beat a line</h2>
+      <p>The entries, their drivers and the harness are in <a href="https://github.com/sibarum/sibarum.github.io/tree/main/nanobuf-golf">nanobuf-golf</a>. With Java 25 or later, from that folder:</p>
+      <pre class="cmd">java Golf.java            # every language
+java Golf.java perl tcl   # just these</pre>
+      <p>It prints each entry's byte counts and which cases fail. It runs on Windows for now, because that's where it finds the C, C#, JScript and VB compilers. The languages here are the ones the test machine already had. Python, JavaScript, Ruby, Go, Lua and PHP come next. A shorter line that passes every case replaces the one here.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Something wrong, or shorter? <a href="https://github.com/sibarum/intrabuf/issues/new">Open an issue</a>. <a href="licenses.html">Licenses and notices</a></p>
+    <p>Oracle and Java are registered trademarks of Oracle and/or its affiliates. Rust is a trademark of the Rust Foundation. Microsoft, Windows, Visual Studio, Visual Basic and JScript are trademarks of the Microsoft group of companies. Other names may be trademarks of their respective owners.</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll(".copy").forEach(function (b) {
+  function say(label) {
+    b.textContent = label;
+    setTimeout(function () { b.textContent = "Copy"; }, 1400);
+  }
+  // Where the clipboard API is refused, select the line and copy that; failing even that, the line stays selected.
+  function fallback(pre) {
+    var range = document.createRange();
+    range.selectNodeContents(pre);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { }
+    say(ok ? "Copied" : "Selected");
+  }
+  b.addEventListener("click", function () {
+    var pre = document.getElementById(b.getAttribute("data-for"));
+    if (!navigator.clipboard) { fallback(pre); return; }
+    navigator.clipboard.writeText(pre.textContent).then(function () { say("Copied"); }, function () { fallback(pre); });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+fn nbr(p:&str,s:&str,m:&str)->Option<Vec<Vec<String>>>{let t=std::fs::read_to_string(p).ok()?;let mut i=t.rsplit_once('\x1e')?.0.split('\x1e').map(|x|x.strip_prefix("\r\n").or(x.strip_prefix(['\r','\n'])).unwrap_or(x).split('\x1f').map(String::from).collect::<Vec<_>>());let h=i.next()?;(h.len()>3&&h[..3]==["nanobuf","1",s]&&h[3].split('.').next()==Some(m)).then(||i.collect())}

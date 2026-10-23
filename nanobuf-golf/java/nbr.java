@@ -1,0 +1,1 @@
+List<String[]>nbr(String p,String s,String m)throws Exception{var r=new ArrayList<>(Pattern.compile("\r?\n?([^\36]*)\36").matcher(Files.readString(Path.of(p))).results().map(x->x.group(1).split("\37")).toList());if(!String.join("\37",r.remove(0)).matches("(?s)nanobuf\0371\37"+Pattern.quote(s)+"\37"+m+"([.\37].*)?"))throw null;return r;}

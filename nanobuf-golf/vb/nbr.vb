@@ -1,0 +1,1 @@
+Dim nbr As Func(Of String,String,String,List(Of String()))=Function(p,s,m)(From t In{File.ReadAllText(p)}Let r=Regex.Matches(t,"\r?\n?([^\x1e]*)\x1e").Cast(Of Match).Select(Function(x)x.Groups(1).Value.Split(ChrW(31))).ToList(),h=r(0)Select If(h(0)="nanobuf"And h(1)="1"And h(2)=s And h(3).Split("."c)(0)=m,r.Skip(1).ToList(),Nothing)).First()

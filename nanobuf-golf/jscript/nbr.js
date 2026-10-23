@@ -1,0 +1,1 @@
+function nbr(p,s,m){var r=[],t=System.IO.File.ReadAllText(p),x=/\r?\n?([^\x1e]*)\x1e/g,a;while(a=x.exec(t))r.push(a[1].split('\x1f'));var h=r.shift();if(h[0]!='nanobuf'||h[1]!='1'||h[2]!=s||h[3].split('.')[0]!=m)throw 0;return r}

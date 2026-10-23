@@ -1,0 +1,1 @@
+static List<string[]>nbr(string p,string s,string m){var r=File.ReadAllText(p).Split('\x1e').Select(x=>Regex.Replace(x,"^\r?\n?","").Split('\x1f')).ToList();var h=r[0];if(h[0]!="nanobuf"||h[1]!="1"||h[2]!=s||h[3].Split('.')[0]!=m)throw null;return r.GetRange(1,r.Count-2);}
