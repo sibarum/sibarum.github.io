@@ -158,7 +158,7 @@
     <canvas id="field" aria-hidden="true"></canvas>
     <div class="wrap">
       <img class="hero-logo" src="img/hero-logo.svg" alt="">
-      <span class="badge">0.1.1 · experimental prerelease</span>
+      <span class="badge"><span data-version="windows">0.1.1</span> · experimental prerelease</span>
       <h1>VexelRay</h1>
       <p class="tagline">Nine desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.</p>
 
@@ -180,7 +180,7 @@
         <div class="platform" id="get-linux">
         <p class="install-label"><strong>Linux:</strong> paste this into a terminal and press <kbd>Enter</kbd></p>
         <div class="cmd"><code id="install-command-linux">curl -fsSL https://raw.githubusercontent.com/sibarum/vexelray-dist/main/preflight/install.sh | sh</code><button class="copy" type="button" data-copy="install-command-linux">Copy</button></div>
-        <p class="hint">No <code>sudo</code>: everything goes under <code>~/.local</code>, for your user. Running the same line again updates everything. These are snapshot builds, 0.1.2-SNAPSHOT, of Vex, Pix, MainFrame, Calculator and VexelRay Inspector; <a href="#linux">the rest are not on Linux yet</a>.</p>
+        <p class="hint">No <code>sudo</code>: everything goes under <code>~/.local</code>, for your user. Running the same line again updates everything. It installs the <span data-version="linux">0.1.2-SNAPSHOT</span> builds of Vex, Pix, MainFrame, Calculator and VexelRay Inspector; <a href="#linux">the rest are not on Linux yet</a>.</p>
         <ul class="facts">
           <li>No root</li>
           <li>Your user only</li>
@@ -350,7 +350,7 @@
             <li>links in <code>~/.local/bin</code>, so <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code> and <code>vexelray-inspector</code> run from a terminal; a link is never put over a file that is not its own</li>
             <li>file types Vex and Pix open, under <em>Open With</em>; one becomes the default only where no program is</li>
           </ul>
-          <p>For now Linux gets snapshot builds (0.1.2-SNAPSHOT), built from the same sources as the next release, until Windows, Linux and macOS ship together. Vexplore, Fluid Sim, Rigid Sim and Maistro have no Linux version yet.</p>
+          <p>For now Linux gets snapshot builds (<span data-version="linux">0.1.2-SNAPSHOT</span>), built from the same sources as the next release, until Windows, Linux and macOS ship together. Vexplore, Fluid Sim, Rigid Sim and Maistro have no Linux version yet.</p>
           <p>Options go between the pipe and <code>sh</code>. Only some of the applications:</p>
           <div class="cmd plain"><code id="linux-only">curl -fsSL https://raw.githubusercontent.com/sibarum/vexelray-dist/main/preflight/install.sh | INSTALL_ONLY=text-editor,pix sh</code><button class="copy" type="button" data-copy="linux-only">Copy</button></div>
           <p><code>INSTALL_NO_SHORTCUTS=1</code>, <code>INSTALL_NO_PATH=1</code> and <code>INSTALL_NO_ASSOCIATIONS=1</code> leave those out the same way. Run the line again to update. To remove everything:</p>
@@ -372,6 +372,7 @@
   <p class="legal">Claude and Claude Code are trademarks of Anthropic, PBC. Oracle, Java and GraalVM are trademarks or registered trademarks of Oracle and/or its affiliates. Vulkan and SPIR-V are trademarks or registered trademarks of The Khronos Group Inc. Windows and Direct3D are trademarks of the Microsoft group of companies. Linux is the registered trademark of Linus Torvalds in the U.S. and other countries. Other names may be trademarks of their respective owners. VexelRay is an independent project, not affiliated with or endorsed by any of them.</p></div>
 </footer>
 
+<script src="versions.js" defer></script>
 <script>
 (function () {
   "use strict";

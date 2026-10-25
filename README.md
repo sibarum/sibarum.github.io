@@ -15,6 +15,7 @@ says when to commit and push it.
 | --- | --- |
 | `index.html` | the page |
 | `install.ps1` | the suite's installer, the same script as `vexelray-dist/install.ps1` |
+| `versions.js` | fills each `data-version="windows"` or `"linux"` element with the version that platform's install line installs now, read from the published manifests, so no page has to be edited when a version ships. `index.html`, `technology.html` and the framework docs load it; give any page that names a version `<span data-version="windows">0.1.1</span>` (the text inside is what shows if the manifest can't be read) and `<script src="https://sibarum.github.io/versions.js" defer></script>` |
 | `img/` | each application's icon and screenshot |
 | `.nojekyll` | serve the files as they are |
 | `technology.html` | the framework's feature page. **Written by hand**: the generator never touches it, and the landing page links to it through a `links` entry in `installer-suite.json`. Its figures come from each repository's own docs, so check them there when they change |
