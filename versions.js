@@ -1,8 +1,7 @@
 // Fills each element marked data-version="windows" or data-version="linux" with the version that platform's install
 // line installs now, read from the manifest the last publish committed. So no page states a version that the next
-// publish makes wrong. The text already in the element stays when the manifest cannot be read, so write words there that
-// read well without a version, or put the element inside one marked data-version-reveal and hidden: that one is
-// shown only once its version is filled in, so nothing waits on the read. Any page can load it:
+// publish makes wrong. The text already in the element stays when the manifest cannot be read, so write the version
+// of the day there (or words that read well without one). Any page can load it:
 //   <script src="https://sibarum.github.io/versions.js" defer></script>
 (function () {
   "use strict";
@@ -25,11 +24,7 @@
       }).then(function (text) {
         var version = String(read[platform](text) || "");
         if (!/^[0-9A-Za-z][0-9A-Za-z.+-]*$/.test(version)) return;
-        wanted[platform].forEach(function (el) {
-          el.textContent = version;
-          var reveal = el.closest("[data-version-reveal]");
-          if (reveal) reveal.hidden = false;
-        });
+        wanted[platform].forEach(function (el) { el.textContent = version; });
       }).catch(function () {});
     });
   }
