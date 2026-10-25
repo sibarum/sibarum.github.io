@@ -173,6 +173,13 @@
   .cmd { display: flex; background: #07080b; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden; }
   .cmd code { flex: 1; min-width: 0; padding: 16px; background: none; color: var(--text); font-size: 0.92rem; white-space: pre-wrap; word-break: break-all; }
   .cmd code::before { content: "PS> "; color: var(--dim); }
+  #install-command-linux::before { content: "$ "; }
+  .os-switch { display: flex; flex-wrap: wrap; gap: 6px; }
+  .os-switch button { appearance: none; border: 1px solid var(--line-2); background: none; color: var(--muted); font: 700 0.74rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 12px; border-radius: 3px; cursor: pointer; }
+  .os-switch button:hover { color: var(--text); }
+  .os-switch button[aria-selected="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .os-pane { display: grid; gap: 18px; }
+  .os-pane[hidden] { display: none; }
   .copy { appearance: none; border: none; background: var(--text); color: var(--bg); font: 800 0.85rem system-ui, sans-serif; padding: 0 18px; cursor: pointer; min-width: 84px; }
   .copy:hover { background: var(--cyan); }
   .checks { display: grid; gap: 6px; font: 0.82rem/1.5 var(--mono); }
@@ -520,10 +527,10 @@
       <div class="text reveal">
         <div class="num"><em>08</em> Distribution</div>
         <h2 id="f8">One line installs. <span class="grad">The same line updates.</span></h2>
-        <p class="pitch">The installer generator writes each app's installer, updater and uninstaller from a single <code>installer.json</code>, and writes the suite's one-line install as well. Installs are per user and need no administrator. Each app gets its own entry in Settings. The apps find and launch each other through the install registry.</p>
+        <p class="pitch">The installer generator writes each app's installer, updater and uninstaller from a single <code>installer.json</code>, for Windows and for Linux, and writes the suite's one-line install as well: PowerShell on Windows, plain POSIX <code>sh</code> on Linux. Installs are per user and need neither administrator nor root. On Windows each app gets its own entry in Settings; on Linux, entries in the applications menu and commands in <code>~/.local/bin</code>. On both, the apps find and launch each other through the install registry.</p>
         <ul class="specs">
           <li><b>SHA-256</b><span>Every download is checked, and nothing is written to disk until all of them pass</span></li>
-          <li><b>No admin</b><span>Installs under your user only, and the uninstaller removes exactly what was installed</span></li>
+          <li><b>No admin, no root</b><span>Installs under your user only, and the uninstaller removes exactly what was installed</span></li>
           <li><b>Re-run = update</b><span>Each executable's version is compared, and an app that is already current is left alone</span></li>
           <li><b>Generated</b><span>Installers, manifests and this site's install page all come from one generator</span></li>
         </ul>
@@ -531,17 +538,33 @@
       </div>
       <div class="reveal">
         <div class="vis install" id="installvis">
-          <div class="vis-label">Windows &middot; PowerShell</div>
-          <div class="cmd"><code id="install-command">irm https://sibarum.github.io/install.ps1 | iex</code><button class="copy" type="button" data-copy="install-command">Copy</button></div>
-          <div class="checks" id="checks">
-            <div>manifest.json fetched</div>
-            <div>install.ps1 matches manifest SHA-256</div>
-            <div>release binary matches SHA-256</div>
-            <div>all downloads verified, writing</div>
-            <div>shortcuts, PATH, Settings &rsaquo; Apps</div>
+          <div class="vis-label">One line &middot; per user</div>
+          <div class="os-switch" role="tablist" aria-label="System">
+            <button type="button" role="tab" id="tab-win" aria-controls="pane-win" aria-selected="true" data-os="win">Windows &middot; PowerShell</button>
+            <button type="button" role="tab" id="tab-linux" aria-controls="pane-linux" aria-selected="false" data-os="linux">Linux &middot; sh</button>
+          </div>
+          <div class="os-pane" id="pane-win" role="tabpanel" aria-labelledby="tab-win">
+            <div class="cmd"><code id="install-command">irm https://sibarum.github.io/install.ps1 | iex</code><button class="copy" type="button" data-copy="install-command">Copy</button></div>
+            <div class="checks">
+              <div>manifest.json fetched</div>
+              <div>install.ps1 matches manifest SHA-256</div>
+              <div>release binary matches SHA-256</div>
+              <div>all downloads verified, writing</div>
+              <div>shortcuts, PATH, Settings &rsaquo; Apps</div>
+            </div>
+          </div>
+          <div class="os-pane" id="pane-linux" role="tabpanel" aria-labelledby="tab-linux" hidden>
+            <div class="cmd"><code id="install-command-linux">curl -fsSL https://raw.githubusercontent.com/sibarum/vexelray-dist/main/preflight/install.sh | sh</code><button class="copy" type="button" data-copy="install-command-linux">Copy</button></div>
+            <div class="checks">
+              <div>manifest.linux.txt fetched</div>
+              <div>install.sh matches manifest SHA-256</div>
+              <div>release build matches SHA-256</div>
+              <div>all downloads verified, writing through a journal</div>
+              <div>menu entries, ~/.local/bin, file types</div>
+            </div>
           </div>
         </div>
-        <p class="caption">Windows 10 or 11, 64-bit, with a Vulkan driver. <a href="./#details">What it changes</a>. On Linux, one line of <code>sh</code> installs the snapshot builds: <a href="./#get-linux">get it here</a>.</p>
+        <p class="caption">Windows 10 or 11, 64-bit, or x86_64 Linux on X11 or XWayland, with a Vulkan driver. Linux gets 0.1.2-SNAPSHOT builds of Vex, Pix, MainFrame, Calculator and VexelRay Inspector for now. What it changes <a href="./#details">on Windows</a> and <a href="./#linux">on Linux</a>.</p>
       </div>
     </div>
   </section>
@@ -900,12 +923,27 @@
     if (reduce) frame(0); else whileVisible(c, frame);
   })();
 
-  /* 08: install checks light up in order */
+  /* 08: Windows or Linux, starting on the visitor's own; the checks light up in order */
   (function () {
-    var rows = document.querySelectorAll("#checks div"), started = false;
+    var tabs = document.querySelectorAll(".os-switch button"), started = false, timers = [];
+    function pane() { return document.querySelector(".os-pane:not([hidden])"); }
     function go() {
-      Array.prototype.forEach.call(rows, function (r, i) { setTimeout(function () { r.classList.add("done"); }, reduce ? 0 : 400 + i * 420); });
+      timers.forEach(clearTimeout); timers = [];
+      Array.prototype.forEach.call(pane().querySelectorAll(".checks div"), function (r, i) {
+        r.classList.remove("done");
+        timers.push(setTimeout(function () { r.classList.add("done"); }, reduce ? 0 : 400 + i * 420));
+      });
     }
+    function show(os) {
+      Array.prototype.forEach.call(tabs, function (t) {
+        var on = t.getAttribute("data-os") === os;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        $(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (started) go();
+    }
+    Array.prototype.forEach.call(tabs, function (t) { t.addEventListener("click", function () { show(t.getAttribute("data-os")); }); });
+    if (/Linux/.test(navigator.userAgent) && !/Android/.test(navigator.userAgent)) show("linux");
     new IntersectionObserver(function (es) { if (es[0].isIntersecting && !started) { started = true; go(); } }, { threshold: 0.5 }).observe($("installvis"));
   })();
 
