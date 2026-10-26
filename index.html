@@ -180,7 +180,7 @@
         <div class="platform" id="get-linux">
         <p class="install-label"><strong>Linux:</strong> paste this into a terminal and press <kbd>Enter</kbd></p>
         <div class="cmd"><code id="install-command-linux">curl -fsSL https://sibarum.github.io/install.sh | sh</code><button class="copy" type="button" data-copy="install-command-linux">Copy</button></div>
-        <p class="hint">No <code>sudo</code>: everything goes under <code>~/.local</code>, for your user. Running the same line again updates everything. It installs Vex, Pix, MainFrame and Calculator, version <span data-version="linux">0.1.2</span>, and VexelRay Inspector <a href="#linux">if you ask for it</a>; the rest are not on Linux yet.</p>
+        <p class="hint">No <code>sudo</code>: everything goes under <code>~/.local</code>, for your user. Running the same line again updates everything. It installs VexelRay IDE, Pix, MainFrame and Calculator, version <span data-version="linux">0.1.2</span>, and VexelRay Inspector <a href="#linux">if you ask for it</a>; the rest are not on Linux yet.</p>
         <ul class="facts">
           <li>No root</li>
           <li>Your user only</li>
@@ -205,8 +205,8 @@
           <div class="app-body"><img src="img/vexplore.png" alt=""><div><h3><a href="https://sibarum.github.io/vexelray-framework/apps/vexplore.html">Vexplore</a></h3><p>A file explorer that suggests instead of asking.</p></div></div>
         </article>
         <article class="app" id="app-text-editor">
-          <div class="shot"><img class="screen" src="img/text-editor-screen.png" alt="Vex: Kronometer's Tempo.java open beside its navigator, the project indexed" loading="lazy"></div>
-          <div class="app-body"><img src="img/text-editor.png" alt=""><div><h3><a href="https://sibarum.github.io/vexelray-framework/apps/text-editor.html">Vex</a></h3><p>A tabbed text editor with a file navigator, on the VexelRay stack.</p></div></div>
+          <div class="shot"><img class="screen" src="img/text-editor-screen.png" alt="VexelRay IDE: Kronometer's Tempo.java open beside its navigator, the project indexed" loading="lazy"></div>
+          <div class="app-body"><img src="img/text-editor.png" alt=""><div><h3><a href="https://sibarum.github.io/vexelray-framework/apps/text-editor.html">VexelRay IDE</a></h3><p>A tabbed text editor with a file navigator, on the VexelRay stack.</p></div></div>
         </article>
         <article class="app" id="app-pix">
           <div class="shot"><img class="screen" src="img/pix-screen.png" alt="Pix: a picture, and under it the file's name, the filmstrip of its neighbours, and the controls" loading="lazy"></div>
@@ -260,9 +260,9 @@
       <h2 id="build-title">Build your own</h2>
       <p class="lede">VexelRay is also a framework: Java 25, compiled to a native executable for Windows or Linux and drawn with Vulkan. Every application above is built on it. Yours can be too, whether a coding agent writes most of it or you write all of it.</p>
       <div class="cards">
-        <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/getting-started.html">Start from the template</a></h3><p>One command generates a working application with tabs, a file navigator, settings that persist, and tests that build the window without a GPU. Vex, Calculator, MainFrame, Maistro and VexelRay Inspector all started this way.</p></article>
+        <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/getting-started.html">Start from the template</a></h3><p>One command generates a working application with tabs, a file navigator, settings that persist, and tests that build the window without a GPU. VexelRay IDE, Calculator, MainFrame, Maistro and VexelRay Inspector all started this way.</p></article>
         <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/developers/with-an-llm.html">Build it with an LLM</a></h3><p>The stack was written with Claude Code. The framework and the GUI carry a <code>CLAUDE.md</code> with the rules the code does not show, and every generated project starts with one. <code>ottermate</code> lets a coding agent drive and screenshot the window it built, so it checks its own work by looking at it.</p></article>
-        <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/developers/in-vex.html">Or write it yourself in Vex</a></h3><p>Vex highlights Java, jumps to any declaration in your project or its libraries (decompiled when there are no sources), runs it with <kbd>F5</kbd>, and shows a folder's Maven modules before you open it. MainFrame and Vexplore work alongside it.</p></article>
+        <article class="card"><h3><a href="https://sibarum.github.io/vexelray-framework/developers/in-vex.html">Or write it yourself in VexelRay IDE</a></h3><p>VexelRay IDE highlights Java, jumps to any declaration in your project or its libraries (decompiled when there are no sources), runs it with <kbd>F5</kbd>, and shows a folder's Maven modules before you open it. MainFrame and Vexplore work alongside it.</p></article>
       </div>
       <p class="action"><a class="button" href="https://sibarum.github.io/vexelray-framework/developers/">Read the developer guide</a></p>
       </div>
@@ -304,7 +304,7 @@
             <li>each application in its own folder under <code>%LOCALAPPDATA%\Programs</code></li>
             <li>desktop and Start menu shortcuts</li>
             <li>your user <code>PATH</code>, so <code>vexplore</code>, <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code>, <code>maistro</code> and <code>vexelray-inspector</code> work from a terminal</li>
-            <li><em>Open with</em> entries for the file types Vex and Pix read. One becomes the default only for a type no other program has claimed: Windows does not let a new program take over an existing one, and neither does this</li>
+            <li><em>Open with</em> entries for the file types VexelRay IDE and Pix read. One becomes the default only for a type no other program has claimed: Windows does not let a new program take over an existing one, and neither does this</li>
             <li>an entry for each application in <em>Settings &rsaquo; Apps</em></li>
           </ul>
           <p>The window that opens has a box for each of these. To start them unticked, or to leave them out when the installer runs without a window, set any of these in the same PowerShell window before the install line:</p>
@@ -348,7 +348,7 @@
             <li>each application in its own folder under <code>~/.local/opt</code></li>
             <li>entries in your applications menu, and launchers on your desktop if you have a Desktop folder</li>
             <li>links in <code>~/.local/bin</code>, so <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code> and <code>vexelray-inspector</code> run from a terminal; a link is never put over a file that is not its own</li>
-            <li>file types Vex and Pix open, under <em>Open With</em>; one becomes the default only where no program is</li>
+            <li>file types VexelRay IDE and Pix open, under <em>Open With</em>; one becomes the default only where no program is</li>
           </ul>
           <p>Linux has had releases since 0.1.2, built from the same sources as the Windows ones. VexelRay Inspector is optional, as on Windows: it is installed only when you name it in <code>INSTALL_ONLY</code>, pass <code>--install-everything</code>, or already have it. Vexplore, Fluid Sim, Rigid Sim and Maistro have no Linux version yet.</p>
           <p>Options go between the pipe and <code>sh</code>. Only some of the applications:</p>
