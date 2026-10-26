@@ -80,6 +80,7 @@
       <a href="./#apps">Applications</a>
       <a href="https://sibarum.github.io/technology.html">Technology</a>
       <a href="https://sibarum.github.io/design.html">Design</a>
+      <a href="https://sibarum.github.io/release-notes.html">Release notes</a>
       <a href="https://sibarum.github.io/vexelray-framework/">Framework</a>
       <a href="https://sibarum.github.io/vexelray-framework/developers/">Developers</a>
       <a href="https://github.com/sibarum/vexelray-framework">GitHub</a>
@@ -108,7 +109,7 @@
     <div class="wrap">
       <div class="eyebrow">Third-party software</div>
       <h2 id="tp-title">Built into the applications</h2>
-      <p>The applications published from this site (version 0.1.0) contain the following third-party software. Each one is used under its own license, linked here. From each application's next release, its install folder also has a <code>THIRD-PARTY-NOTICES.txt</code> next to the executable, listing what that executable contains with the full text of each license.</p>
+      <p>The applications published from this site (version 0.1.2) contain the following third-party software. Each one is used under its own license, linked here. Since 0.1.1, each application's install folder also has a <code>THIRD-PARTY-NOTICES.txt</code> next to the executable, listing what that executable and the folders beside it contain, with the full text of each license.</p>
       <table>
         <thead><tr><th scope="col">Component</th><th scope="col">License</th><th scope="col">In</th></tr></thead>
         <tbody>
@@ -127,7 +128,9 @@
           <tr><th scope="row"><a href="https://bitbucket.org/snakeyaml/snakeyaml-engine">SnakeYAML Engine</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
           <tr><th scope="row"><a href="https://github.com/javaparser/javaparser">JavaParser</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a> (dual-licensed with LGPL-3.0)</td><td>Vex</td></tr>
           <tr><th scope="row"><a href="https://github.com/Vineflower/vineflower">Vineflower</a></th><td class="lic"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></td><td>Vex</td></tr>
-          <tr><th scope="row"><a href="https://ffmpeg.org/">FFmpeg</a> libraries, as separate DLLs in an <code>ffmpeg</code> folder</th><td class="lic"><a href="https://www.gnu.org/licenses/lgpl-3.0.html">LGPL</a>; its license and source are named in that folder</td><td>Pix</td></tr>
+          <tr><th scope="row"><a href="https://ffmpeg.org/">FFmpeg</a> libraries for decoding video and sound, as separate libraries in an <code>ffmpeg</code> folder (DLLs on Windows, <code>.so</code> files on Linux)</th><td class="lic"><a href="https://www.gnu.org/licenses/lgpl-3.0.html">LGPL</a>; its license and source are named in that folder</td><td>Pix, Vexplore</td></tr>
+          <tr><th scope="row"><a href="https://miniaud.io/">miniaudio</a>, built into that folder's <code>ffwrap</code> library</th><td class="lic">Public domain, or <a href="https://opensource.org/license/mit-0">MIT No Attribution</a></td><td>Pix, Vexplore</td></tr>
+          <tr><th scope="row"><a href="https://ffmpeg.org/">FFmpeg</a> with <a href="https://gitlab.com/AOMediaCodec/SVT-AV1">SVT-AV1</a> linked in, for recording a window to video, in an <code>ffmpeg-record</code> folder</th><td class="lic">FFmpeg under the <a href="https://www.gnu.org/licenses/lgpl-3.0.html">LGPL</a>; SVT-AV1 under the <a href="https://gitlab.com/AOMediaCodec/SVT-AV1/-/blob/master/LICENSE.md">BSD 3-Clause Clear License</a> and the <a href="https://gitlab.com/AOMediaCodec/SVT-AV1/-/blob/master/PATENTS.md">Alliance for Open Media Patent License 1.0</a>. The licenses and source are named in that folder</td><td>Every application</td></tr>
         </tbody>
       </table>
       <p class="note">The applications draw through the Vulkan loader already on your computer, and on Windows through Direct3D 12, on Linux through X11. None of these is included in the downloads. The Vulkan, Windows and X11 bindings are written in VexelRay itself, so no Vulkan SDK headers are included either.</p>

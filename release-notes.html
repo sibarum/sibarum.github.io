@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VexelRay Release Notes</title>
+<meta name="description" content="What each VexelRay release brought to the applications, the framework and the installers, newest first.">
+<link rel="icon" href="img/logo.svg">
+<style>
+  :root {
+    --bg: #050608;
+    --bg-2: #0b0d12;
+    --panel: #10131a;
+    --line: #1f2430;
+    --line-2: #2c3342;
+    --text: #f2f4f8;
+    --muted: #9aa3b5;
+    --dim: #5f6879;
+    --blue: #2563eb;
+    --cyan: #3ee0ff;
+    --violet: #8b5cf6;
+    --grad: linear-gradient(100deg, var(--cyan), var(--blue) 55%, var(--violet));
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+  a { color: var(--cyan); }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 32px; } }
+
+  .top { position: sticky; top: 0; z-index: 10; background: rgba(5, 6, 8, 0.78); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 20px; min-height: 56px; max-width: 1200px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; font-size: 0.95rem; }
+  .brand img { width: 26px; height: 26px; }
+  .top nav { margin-left: auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; font-size: 0.88rem; padding: 8px 0; }
+  .top nav a { color: var(--muted); text-decoration: none; }
+  .top nav a:hover, .top nav a[aria-current] { color: var(--text); }
+  @media (max-width: 560px) {
+    .top .wrap { flex-wrap: wrap; }
+    .top nav { margin-left: 0; justify-content: flex-start; padding-top: 0; }
+  }
+
+  header.page { padding: clamp(48px, 8vw, 88px) 0 24px; }
+  .eyebrow { font: 700 0.78rem/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); }
+  h1 { font-size: clamp(2.4rem, 7vw, 4.4rem); line-height: 0.95; letter-spacing: -0.045em; font-weight: 900; margin: 18px 0 16px; }
+  .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { color: var(--muted); font-size: 1.08rem; max-width: 62ch; margin: 0; }
+
+  .versions { display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0 0; padding: 0; list-style: none; }
+  .versions a { display: block; padding: 8px 14px; border: 1px solid var(--line-2); border-radius: 6px; background: var(--panel); color: var(--text); text-decoration: none; font-size: 0.9rem; }
+  .versions a:hover { border-color: var(--cyan); }
+  .versions b { font-family: var(--mono); margin-right: 8px; }
+  .versions span { color: var(--dim); }
+
+  section { padding: 44px 0; border-top: 1px solid var(--line); scroll-margin-top: 64px; }
+  h2 { font-size: clamp(1.7rem, 4vw, 2.5rem); letter-spacing: -0.03em; font-weight: 900; margin: 12px 0 6px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; color: var(--muted); font-size: 0.92rem; margin: 0 0 18px; }
+  .chip { font: 700 0.68rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--line-2); color: var(--muted); }
+  .chip.new { color: var(--cyan); border-color: rgba(62, 224, 255, 0.4); }
+  section > .wrap > p { color: var(--muted); max-width: 72ch; }
+
+  .highlights { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin: 22px 0 8px; }
+  .highlights article { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; }
+  .highlights h3 { margin: 0 0 6px; font-size: 1.02rem; }
+  .highlights p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+
+  .groups { display: grid; gap: 4px 40px; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); margin-top: 18px; }
+  @media (max-width: 460px) { .groups { grid-template-columns: 1fr; } }
+  .groups h3 { font: 700 0.74rem/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); margin: 26px 0 4px; }
+  .groups ul { margin: 0; padding-left: 1.1em; }
+  .groups li { color: var(--muted); font-size: 0.94rem; margin: 6px 0; }
+  .groups li::marker { color: var(--line-2); }
+  .groups li b { color: var(--text); font-weight: 650; }
+
+  code, kbd { font: 0.86em var(--mono); color: #d7e3ff; background: rgba(62, 224, 255, 0.08); padding: 1px 5px; border-radius: 3px; }
+  kbd { border: 1px solid var(--line-2); background: var(--bg-2); }
+  .note { margin-top: 22px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--line-2); border-left: 3px solid var(--cyan); color: var(--muted); font-size: 0.92rem; max-width: 72ch; }
+
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 0.84rem; color: var(--dim); }
+  footer a { color: var(--muted); }
+  a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="img/logo.svg" alt="">VexelRay</a>
+    <nav aria-label="Links">
+      <a href="./#apps">Applications</a>
+      <a href="https://sibarum.github.io/technology.html">Technology</a>
+      <a href="https://sibarum.github.io/design.html">Design</a>
+      <a href="https://sibarum.github.io/release-notes.html" aria-current="page">Release notes</a>
+      <a href="https://sibarum.github.io/vexelray-framework/">Framework</a>
+      <a href="https://sibarum.github.io/vexelray-framework/developers/">Developers</a>
+      <a href="https://github.com/sibarum/vexelray-framework">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <header class="page">
+    <div class="wrap">
+      <div class="eyebrow">Release notes</div>
+      <h1>What's <span class="grad">new.</span></h1>
+      <p class="lede">What each release brought to the applications, the framework under them and the installers, newest first. A change is listed under the first release that has it. VexelRay is an experimental prerelease, so expect a lot to change between versions.</p>
+      <ul class="versions">
+        <li><a href="#next"><b>next</b><span>in development</span></a></li>
+        <li><a href="#v0-1-2"><b>0.1.2</b><span>25 Oct 2026</span></a></li>
+        <li><a href="#v0-1-1"><b>0.1.1</b><span>20 Oct 2026</span></a></li>
+        <li><a href="#v0-1-0"><b>0.1.0</b><span>13 Oct 2026</span></a></li>
+      </ul>
+    </div>
+  </header>
+
+  <section id="next" aria-labelledby="next-title">
+    <div class="wrap">
+      <div class="eyebrow">In development</div>
+      <h2 id="next-title">Since 0.1.2</h2>
+      <p class="meta"><span class="chip">Not released yet</span> In the sources; the next release will have these.</p>
+      <div class="groups">
+        <div>
+          <h3>Framework</h3>
+          <ul>
+            <li><b>Frames are capped at 60 Hz</b> on any display, so a high-refresh monitor no longer means more work for the same picture.</li>
+            <li><b>Layered, multi-colour icons.</b></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Applications</h3>
+          <ul>
+            <li><b>Vex:</b> icons in the navigator, and the navigator lists a folder again after a save.</li>
+            <li><b>Maistro:</b> agent tools that look at the VexelRay applications you have running.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="v0-1-2" aria-labelledby="v012-title">
+    <div class="wrap">
+      <div class="eyebrow">25 October 2026</div>
+      <h2 id="v012-title">0.1.2: Linux</h2>
+      <p class="meta"><span class="chip new">Windows</span><span class="chip new">Linux</span> Nine applications on Windows, five on Linux.</p>
+      <div class="highlights">
+        <article><h3>The first Linux release</h3><p>Vex, Pix, MainFrame, Calculator and VexelRay Inspector, for 64-bit Linux on X11 or XWayland. One line installs them for your user under <code>~/.local</code>, with menu entries, <em>Open With</em> file types, and one command to uninstall: <code>curl -fsSL https://sibarum.github.io/install.sh | sh</code></p></article>
+        <article><h3>Record any window</h3><p>Every application has a camera button in its title bar that records the window to video, AV1 in Matroska.</p></article>
+        <article><h3>Motion, on by default</h3><p>Things enter and leave with motion, and zoom glides, across the whole window. Reduced motion follows your system's setting. When frames run slow, an application offers simpler graphics.</p></article>
+      </div>
+      <div class="groups">
+        <div>
+          <h3>Applications</h3>
+          <ul>
+            <li><b>MainFrame:</b> terminals run on a pseudo-terminal on every platform. On Linux it offers your login shell first, then bash, zsh, fish and sh. Environment scripts work in bash and zsh too.</li>
+            <li><b>MainFrame:</b> <kbd>Ctrl</kbd>+<kbd>C</kbd> copies a selection, and interrupts when there is none. A passthrough switch hands every key to the shell.</li>
+            <li><b>Vex:</b> a run uses a pseudo-terminal on every platform.</li>
+            <li><b>VexelRay Inspector:</b> a component graph of the running app; the tape, to pause and look back; what the app draws with; and a tachometer of frames drawn against the display's refresh rate.</li>
+            <li><b>Vexplore:</b> the suggestion rail splits folders from suggestions with a divider you can drag.</li>
+            <li><b>Calculator:</b> points off the real line are plotted, with the imaginary part as a curve of its own.</li>
+            <li><b>Pix:</b> on Linux, with FFmpeg for video and sound. Pictures get an automatic backdrop.</li>
+            <li><b>Rigid Sim:</b> falls back to the CPU on a graphics card with no compute queue of its own.</li>
+            <li><b>Every application:</b> a filled-in About window.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Framework</h3>
+          <ul>
+            <li><b>Linux windowing over X11</b>, presented through a Vulkan swapchain. A window keeps its size and place when it moves to another monitor.</li>
+            <li><b>Audio:</b> the codec plays MP3, AAC, FLAC, Vorbis, Opus and WAV, with one-knob compression and a night mode.</li>
+            <li><b>Recording</b> is a separate, encoder-only FFmpeg, so it adds 5.5 MiB, not a full FFmpeg.</li>
+            <li>A split pane can show one pane alone. Icons are baked at build time, and an application's own set extends the suite's.</li>
+            <li>Single-channel SDF font atlases, as an alternative to MSDF.</li>
+            <li>Key maps run actions in order and can be paused.</li>
+            <li>A check of the stack at startup, and a <code>@Trace</code> weaver.</li>
+            <li><b>Intrabuf:</b> nanobuf and nanotemplate, a reader and a writer in one shell line. See <a href="nanobuf-golf.html">Nanobuf golf</a>.</li>
+            <li><b>Atchung:</b> cause correlation, and a trace lane for probes.</li>
+            <li>One step installs the whole stack for development: <code>bootstrap.sh</code>.</li>
+          </ul>
+          <h3>Installers</h3>
+          <ul>
+            <li><b>Linux installers</b> for every application and the suite: install, update and uninstall, each checked by SHA-256.</li>
+            <li>Desktop entries are named so docks match them to their window. A rename keeps file-type defaults and moves GNOME dock pins.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Not on Linux yet: Vexplore, Fluid Sim, Rigid Sim and Maistro. Wayland works through XWayland, and every window draws at 100%, whatever the desktop's scaling.</p>
+    </div>
+  </section>
+
+  <section id="v0-1-1" aria-labelledby="v011-title">
+    <div class="wrap">
+      <div class="eyebrow">20 October 2026</div>
+      <h2 id="v011-title">0.1.1: nine applications, and undo everywhere</h2>
+      <p class="meta"><span class="chip">Windows</span> Maistro and VexelRay Inspector join the suite.</p>
+      <div class="highlights">
+        <article><h3>Two new applications</h3><p><b>Maistro</b>, a desktop client for Claude Code with a mind map beside the conversation, and <b>VexelRay Inspector</b>, which attaches to a running app and shows its frame loop. Both are optional, like the simulations.</p></article>
+        <article><h3>Undo, everywhere</h3><p>Every window has one undo history. Every control that holds a value records into it. <kbd>Ctrl</kbd>+<kbd>Z</kbd> first shows you where the change was, then reverses it there. An undo that can't apply says why. <kbd>Ctrl</kbd>+<kbd>Y</kbd> redoes.</p></article>
+        <article><h3>Pix plays video</h3><p>With sound, volume and mute that are remembered, and a preview frame on the seek bar. Animated GIF, WebP and APNG play like movies. A double-click goes full screen.</p></article>
+      </div>
+      <div class="groups">
+        <div>
+          <h3>Applications</h3>
+          <ul>
+            <li><b>Maistro (new):</b> inline Allow and Deny for tool permissions; conversations are saved and resumed (<kbd>Ctrl</kbd>+<kbd>N</kbd>, <kbd>Ctrl</kbd>+<kbd>O</kbd>); and a branch from a node of the map merges back.</li>
+            <li><b>VexelRay Inspector (new):</b> attach to an app chosen from a picker, or by launching it. Stalls are caught, and history is kept per build.</li>
+            <li><b>Vexplore:</b> remote folders over SFTP, through your own <code>ssh</code>. Moves, copies, archives and deletes can be undone and redone.</li>
+            <li><b>Vexplore:</b> two folders side by side, with drag between them; an Open menu in the title bar, with <em>New host</em>; videos previewed in the dock and opened in Pix; and <em>Open in Windows Explorer</em>.</li>
+            <li><b>Vex:</b> a Run menu (<kbd>F5</kbd>) with a console; a formatted Markdown view (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>); an undo history per file; and file-type icons.</li>
+            <li><b>Vex:</b> Scratches, notes that belong to no project. Preferences, kept per project, with a light theme, word wrap and indexing. <em>Open in MainFrame</em> on folders.</li>
+            <li><b>Pix:</b> touchpad pan, pinch and twist, and every key and gesture can be rebound. Video files can open in Pix.</li>
+            <li><b>MainFrame:</b> zoom with <kbd>Ctrl</kbd>+<kbd>=</kbd> and <kbd>Ctrl</kbd>+<kbd>-</kbd>. Environment scripts per workspace and per tab, edited in Vex. Every command is an action you can rebind.</li>
+            <li><b>Calculator:</b> answers are typeset and simplified. A plot pops out into an explorer you can pan and zoom from the keyboard, and each order of 0/ω is plotted as its own curve.</li>
+            <li><b>Rigid Sim:</b> boxes as well as spheres, a pile of 1,000 that comes to rest, and rolling resistance. <b>Fluid Sim:</b> slime.</li>
+            <li><b>Every application:</b> offers its own updates, has an icon in the notification area, and installs a <code>THIRD-PARTY-NOTICES.txt</code> beside it.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Framework</h3>
+          <ul>
+            <li><b>Your key bindings:</b> rebind any key and it simply takes effect. Touchpad gestures bind like keys.</li>
+            <li><b>Automation:</b> one socket drives every window, and remote control and diagnostics are separate sockets. <em>Restart in debug mode</em> from the title bar's plug. <code>ottermate</code> gained <code>list</code>, <code>await</code>, <code>keydown</code>/<code>keyup</code> and <code>hide</code>/<code>show</code>, and <code>settle</code> names what keeps the loop busy.</li>
+            <li><b>Background runs:</b> an app a coding agent starts draws for real but stays out of the way, never taking focus, and the person at the desk can end it from the notification area.</li>
+            <li><b>A flight recorder</b> of recent frames, with <code>frames worst</code> and <code>why</code>.</li>
+            <li>Borderless full screen. Drawing works on dzn, Vulkan over Direct3D 12.</li>
+            <li>Colour fades, press ripples and gliding tab underlines. Drag between lists.</li>
+            <li>A mesh technique for polygon models, and streamed textures for live video frames.</li>
+            <li><b>Kronometer:</b> tempos that glide, in exact ratios.</li>
+            <li>Every module is stamped with the build it came from. A <a href="https://sibarum.github.io/vexelray-framework/developers/">developer guide</a>.</li>
+          </ul>
+          <h3>Installer</h3>
+          <ul>
+            <li>One installer window, with a box for each application and option, progress and a summary.</li>
+            <li>Optional applications start unticked. <code>--install-everything</code> and <code>--do-not-prompt-me</code>.</li>
+            <li>System requirements are checked first, and <code>diagnose.ps1</code> writes a report.</li>
+            <li>An install is a transaction: it backs up and rolls back. Downloads run four at a time, resume, retry, and are cached by SHA-256.</li>
+            <li>An app manager in the Start menu.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="v0-1-0" aria-labelledby="v010-title">
+    <div class="wrap">
+      <div class="eyebrow">13 October 2026</div>
+      <h2 id="v010-title">0.1.0: the first release</h2>
+      <p class="meta"><span class="chip">Windows</span> Seven applications, installed with one line of PowerShell.</p>
+      <p>Vexplore, Vex, Pix, MainFrame, Calculator, Fluid Sim and Rigid Sim, each installed for your user only, every download checked by SHA-256, with <em>Open with</em> entries for the file types Vex and Pix read. What they gained in the weeks before it:</p>
+      <div class="groups">
+        <div>
+          <h3>Applications</h3>
+          <ul>
+            <li><b>Vexplore:</b> the suggestion rail, and actions where a modifier key says what you mean. An image preview dock, and pictures open in Pix. A git status column inside a repository, and <em>Open MainFrame Here</em>.</li>
+            <li><b>Vex:</b> takes its name. Go to declaration (<kbd>Ctrl</kbd>+<kbd>Enter</kbd>), in your project and its libraries, decompiled when there are no sources. <em>Open in Vexplore</em>. Each project root keeps its own tabs.</li>
+            <li><b>Pix (new):</b> a picture viewer whose window is the picture, sharp when you look closely, with scaling settings and filters.</li>
+            <li><b>MainFrame:</b> rebuilt on the framework's template, with tabs, workspaces (<kbd>Ctrl</kbd>+<kbd>O</kbd>), settings, and <code>--dir</code>, <code>--workspace</code> and <code>--insert-path</code>.</li>
+            <li><b>Calculator (new):</b> evaluates in cott-engine's traction algebras, and past lines come back to the entry.</li>
+            <li><b>Fluid Sim:</b> surface tension, temperature and buoyancy, foam and boiling, and a 3D dam break.</li>
+            <li><b>Rigid Sim:</b> physics on its own Vulkan queue, with restitution, spin and friction.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Framework</h3>
+          <ul>
+            <li>A frame is drawn only when something changed, not on every wake.</li>
+            <li>A watchdog and stall detection for each lane. A blocking cycle of sends is a compile error. A compute queue can be lent to one component.</li>
+            <li>On Windows, every window presents through DXGI, and a resize reallocates nothing.</li>
+            <li><b>Shadelets:</b> an uber-shader each application composes, with looks and styles.</li>
+            <li>Baked font families, with bold and italic spans. A single focus ring drawn by the renderer. Board and deck cards, slider detents, and word and line selection.</li>
+            <li><b>Intrabuf</b>, new: generated binary codecs with a text form. <b>Kronometer</b>: the handoff, and dilated time.</li>
+            <li>The template writes a working text editor. The build fails if LWJGL appears anywhere.</li>
+            <li>Lean proofs that the fluid's particle-to-grid scatter is deterministic.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Something wrong, or missing? <a href="https://github.com/sibarum/vexelray-framework/issues/new">Open an issue</a>. &middot; <a href="https://sibarum.github.io/technology.html">Technology</a> &middot; <a href="https://sibarum.github.io/design.html">Design</a> &middot; <a href="licenses.html">Licenses and notices</a></div>
+</footer>
+</body>
+</html>
