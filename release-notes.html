@@ -118,12 +118,21 @@
       <div class="eyebrow">In development</div>
       <h2 id="next-title">Since 0.1.2</h2>
       <p class="meta"><span class="chip">Not released yet</span> In the sources; the next release will have these.</p>
+      <!-- TBD v0.2: these hold once phases 4 and 5 land (the tick runs components, the processor closes the main thread, the mode is built). Name the mode's launch setting here when phase 4 picks it -->
+      <div class="highlights">
+        <article><h3>Everything talks by messages</h3><p>Every part of an application, from a button to a controller, is a component with its own state and mailbox. Mailboxes drain once per tick in one order: the last write to a piece of state wins, and every event arrives. No callbacks and no locks.</p></article>
+        <article><h3>Multithreaded, by declaration</h3><p>Components run on a logic lane, never the main thread. One that wants a core to itself declares a lane, and nothing else about it changes. A single-thread mode runs the same ticks on the main thread for small and headless machines.</p></article>
+        <article><h3>Checked by the compiler</h3><p>A component is handed a typed sender for each topic it publishes on, so every edge of the message graph is in a constructor. No application code can reach the main thread.</p></article>
+      </div>
       <div class="groups">
         <div>
           <h3>Framework</h3>
           <ul>
             <li><b>Frames are capped at 60 Hz</b> on any display, so a high-refresh monitor no longer means more work for the same picture.</li>
             <li><b>Layered, multi-colour icons.</b></li>
+            <li><b>The handler lane is gone.</b> A click, a key or an edit is a message the widget publishes, and a <code>Gui</code> owns no threads.</li>
+            <li>Blocking work is a <code>@Job</code>: a request and a reply, run on the bounded job lane.</li>
+            <li><b>Atchung 1.4:</b> state and edge topics, and the tick that drains them.</li>
           </ul>
         </div>
         <div>

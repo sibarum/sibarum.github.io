@@ -119,8 +119,8 @@
   .lane.main .pulse { background: var(--cyan); box-shadow: 0 0 14px var(--cyan); }
   .lane.time .pulse { background: var(--lime); box-shadow: 0 0 14px var(--lime); }
   .lane.comp .pulse { background: var(--blue); box-shadow: 0 0 14px var(--blue); }
-  .lane.hand .pulse { background: var(--violet); box-shadow: 0 0 14px var(--violet); }
-  .lane.off .pulse { background: #f59e0b; box-shadow: 0 0 14px #f59e0b; }
+  .lane.decl .pulse { background: var(--violet); box-shadow: 0 0 14px var(--violet); }
+  .lane.job .pulse { background: #f59e0b; box-shadow: 0 0 14px #f59e0b; }
   .lanes .wd { font: 700 0.72rem var(--mono); color: var(--dim); margin: 6px 0 0 124px; }
   @media (max-width: 480px) { .lane { grid-template-columns: 84px 1fr; } .lanes .wd { margin-left: 96px; } }
 
@@ -283,7 +283,7 @@
   <section class="hero" aria-labelledby="hero-title">
     <canvas id="field" aria-hidden="true"></canvas>
     <div class="wrap">
-      <div class="eyebrow">VexelRay framework &middot; 0.1</div>
+      <div class="eyebrow">VexelRay framework &middot; 0.2</div>
       <h1 id="hero-title">Desktop software, <span class="grad">drawn live on the GPU.</span></h1>
       <p class="sub">You write Java 25 and ship a native executable for Windows or Linux that draws with Vulkan. Everything between the two is built to be fast, deterministic and easy to observe.</p>
       <div class="ctas">
@@ -306,7 +306,7 @@
       <div class="text reveal">
         <div class="num"><em>01</em> GUI</div>
         <h2 id="f1">A retained tree, drawn immediately, <span class="grad">only on demand.</span></h2>
-        <p class="pitch">You change widgets through thread-safe handles from any thread. The GUI thread takes those changes once per frame and draws the whole window with one SDF uber-shader. If nothing is moving and no input arrives, the loop sleeps and draws nothing.</p>
+        <p class="pitch">A widget is changed by sending it a message, from any lane, and what it does (a click, an edit, a selection) it publishes as a message too. The GUI thread drains the widgets' mailboxes once per frame and draws the whole window with one SDF uber-shader. If nothing is moving and no input arrives, the loop sleeps and draws nothing.</p>
         <ul class="specs">
           <li><b>140 &rarr; 0 fps</b><span>A still window drops to 5 fps when focused and 0 fps in the background</span></li>
           <li><b>~1 ms</b><span>Median wake to first frame, 0.6 to 1.3 ms across runs (p95 1.0 to 2.0 ms)</span></li>
@@ -333,27 +333,28 @@
       <div class="text reveal">
         <div class="num"><em>02</em> Concurrency</div>
         <h2 id="f2">Multithreaded <span class="grad">by default.</span> Checked by the compiler.</h2>
-        <p class="pitch">There are exactly five lanes. The main thread keeps Vulkan, the window and the present, and nothing else. App logic runs on component threads, disk work on a bounded offload lane, and time on its own timeline. The annotation processor decides placement at compile time, so the binary has no scheduler and no work stealing.</p>
+        <p class="pitch">Every part of an application is a component: it owns its state, has a mailbox, and talks only by messages. The framework keeps three lanes of its own: the main thread for Vulkan, the window and the present, a timeline for time, and a bounded job lane for disk and network. Components run on the logic lane, never the main thread. A component that wants a core to itself declares a lane, and nothing else about it changes: not its code, not its messages, not the wiring that reaches it. Placement is fixed at compile time, so the binary has no scheduler and no work stealing.</p>
         <ul class="specs">
-          <li><b>5 lanes</b><span>main, timeline, component, handler, offload. The list is closed</span></li>
-          <li><b>33 rules</b><span>21 of them are enforced by a test or the type system. A blocking cycle in the message graph is a compile error</span></li>
+          <li><b>4 + n lanes</b><span>main, timeline and job for the framework, logic for components, and any lane a component declares</span></li>
+          <li><b>One order</b><span>Mailboxes drain once per tick, in the same order on one lane or many. The last write to a piece of state wins, and every event arrives</span></li>
+          <!-- TBD v0.2: the rule count and how many are held come from threading.md's matrix once phases 4 to 7 land (49 rules, 10 held, on 2026-10-28) -->
+          <li><b>49 rules</b><span>Each says how it is enforced. A send is a constructor parameter, so the compiler sees every edge of the message graph</span></li>
           <li><b>Watchdog</b><span>A lane that hangs is reported by name. It takes only its own thread down, never the window</span></li>
           <li><b>Compute queue</b><span>A Vulkan compute queue can be lent to one component, so physics never blocks a frame</span></li>
         </ul>
         <a class="more" href="https://github.com/sibarum/vexelray-framework">vexelray-framework</a>
       </div>
       <div class="reveal">
-        <div class="vis lanes" aria-label="Five lanes running side by side">
+        <div class="vis lanes" aria-label="The framework's three lanes, the logic lane, and one lane a component declared, running side by side">
           <div class="vis-label">Lanes</div>
           <div class="lane main"><label>main</label><div class="track"><i class="pulse" style="width:9%;animation-duration:1.1s"></i><i class="pulse" style="width:9%;animation-duration:1.1s;animation-delay:-.55s"></i></div></div>
           <div class="lane time"><label>timeline</label><div class="track"><i class="pulse" style="width:4%;animation-duration:2.2s"></i><i class="pulse" style="width:4%;animation-duration:2.2s;animation-delay:-1.1s"></i></div></div>
-          <div class="lane comp"><label>component&#8209;a</label><div class="track"><i class="pulse" style="width:22%;animation-duration:3.1s"></i></div></div>
-          <div class="lane comp"><label>component&#8209;b</label><div class="track"><i class="pulse" style="width:14%;animation-duration:2.6s;animation-delay:-1.4s"></i></div></div>
-          <div class="lane hand"><label>handler</label><div class="track"><i class="pulse" style="width:6%;animation-duration:1.7s;animation-delay:-.3s"></i></div></div>
-          <div class="lane off"><label>offload</label><div class="track"><i class="pulse" style="width:34%;animation-duration:4.2s;animation-delay:-2s"></i></div></div>
+          <div class="lane job"><label>job</label><div class="track"><i class="pulse" style="width:34%;animation-duration:4.2s;animation-delay:-2s"></i></div></div>
+          <div class="lane comp"><label>logic</label><div class="track"><i class="pulse" style="width:14%;animation-duration:2.6s;animation-delay:-1.4s"></i><i class="pulse" style="width:8%;animation-duration:2.6s;animation-delay:-.3s"></i></div></div>
+          <div class="lane decl"><label>physics</label><div class="track"><i class="pulse" style="width:22%;animation-duration:3.1s"></i></div></div>
           <div class="wd">watchdog: all lanes responsive</div>
         </div>
-        <p class="caption">Illustration. All lanes are platform threads, and placement is fixed in the binary.</p>
+        <p class="caption">Illustration. <code>physics</code> is a lane one component declared for itself. All lanes are platform threads, and placement is fixed in the binary.</p>
       </div>
     </div>
   </section>
@@ -451,11 +452,11 @@
       <div class="text reveal">
         <div class="num"><em>06</em> Messaging</div>
         <h2 id="f6">Atchung. <span class="grad">One topic, any transport.</span></h2>
-        <p class="pitch">Inside the VM, messages go over a zero-copy bus with versioned, lock-free state snapshots. When a message has to leave the process, elektro-Q carries the same topic over TCP, a Unix socket or UDP, with codecs generated at compile time from <code>@Message</code> records. The fast in-VM path never pays for the network.</p>
+        <p class="pitch">Inside the VM, messages go over a zero-copy bus with versioned, lock-free state snapshots. When a message has to leave the process, elektro-Q carries the same topic over TCP, a Unix socket or UDP, with codecs generated at compile time from <code>@Message</code> records. The fast in-VM path never pays for the network. A topic says whether it carries state, where the last write in a tick wins, or edges, where every message arrives in order.</p>
         <ul class="specs">
           <li><b>4 transports</b><span>in-VM, TCP, Unix domain sockets, and UDP netcode with sequencing, acks and a network simulator</span></li>
           <li><b>5 policies</b><span>For backpressure: drop oldest, drop newest, coalesce latest, block or fail</span></li>
-          <li><b>0 reflection</b><span>No dependencies. Delivery is inline, async or pumped</span></li>
+          <li><b>0 reflection</b><span>No dependencies. Delivery is inline, async, pumped or by the tick</span></li>
           <li><b>Bridged</b><span><code>ElektroBridge</code> carries a local topic across the wire in both directions, with loop prevention</span></li>
         </ul>
         <a class="more" href="https://github.com/sibarum/atchung">atchung</a>
@@ -501,6 +502,7 @@
         <ul class="specs">
           <li><b>Java 25</b><span>Maven and the JVM while you develop, GraalVM native-image when you release</span></li>
           <li><b>0 reflection</b><span>Injection is generated by the annotation processor, so native-image needs no configuration for it</span></li>
+          <!-- TBD v0.2: remeasure the heap and thread count once the handler pool is gone (phase 7) -->
           <li><b>5 MB heap</b><span>Stays flat under load, with 17 threads throughout</span></li>
           <li><b>30&ndash;40 s</b><span>For a native build of an application</span></li>
         </ul>
@@ -661,9 +663,9 @@
           <tr><th scope="row">Shaders</th><td>SupirVast IR &rarr; SPIR-V at build time. The same IR runs on the CPU through Truffle</td></tr>
           <tr><th scope="row">GUI</th><td>Retained node tree, a single SDF uber-shader, flex layout in rem, em, dp, % and viewport units, zoom from 0.5&times; to 3&times;</td></tr>
           <tr><th scope="row">Frame loop</th><td>Draws on demand. 0 fps when idle, about 1 ms median wake to frame</td></tr>
-          <tr><th scope="row">Threading</th><td>5 lanes placed at compile time, platform threads, a watchdog per lane</td></tr>
+          <tr><th scope="row">Threading</th><td>Multithreaded by default: main, timeline and job lanes for the framework, a logic lane for components, and any lane a component declares. Placed at compile time, platform threads, a watchdog per lane. A single-thread mode for small and headless machines</td></tr>
           <tr><th scope="row">Clock</th><td>Kronometer: realtime, virtual (deterministic) and driven clocks, and 4 slip policies</td></tr>
-          <tr><th scope="row">Messaging</th><td>Atchung in-VM bus. elektro-Q across processes over TCP, Unix sockets or UDP</td></tr>
+          <tr><th scope="row">Messaging</th><td>Every part talks by messages. Atchung in-VM bus, drained in ticks: state topics keep the last write, edge topics every message. elektro-Q across processes over TCP, Unix sockets or UDP</td></tr>
           <tr><th scope="row">Serialization</th><td>Intrabuf: generated codecs, positional varint format, text form</td></tr>
           <tr><th scope="row">Automation</th><td>Loopback automation port, off by default, driven by the <code>ottermate</code> CLI</td></tr>
           <tr><th scope="row">Install</th><td>One line, PowerShell on Windows or <code>sh</code> on Linux, per user, SHA-256 verified, and re-running it updates</td></tr>
