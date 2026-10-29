@@ -333,12 +333,13 @@
       <div class="text reveal">
         <div class="num"><em>02</em> Concurrency</div>
         <h2 id="f2">Multithreaded <span class="grad">by default.</span> Checked by the compiler.</h2>
-        <p class="pitch">Every part of an application is a component: it owns its state, has a mailbox, and talks only by messages. The framework keeps three lanes of its own: the main thread for Vulkan, the window and the present, a timeline for time, and a bounded job lane for disk and network. Components run on the logic lane, never the main thread. A component that wants a core to itself declares a lane, and nothing else about it changes: not its code, not its messages, not the wiring that reaches it. Placement is fixed at compile time, so the binary has no scheduler and no work stealing.</p>
+        <p class="pitch">Every part of an application is a component: it owns its state, has a mailbox, and talks only by messages. The framework keeps three lanes of its own: the main thread for Vulkan, the window and the present, a timeline for time, and a bounded job lane for disk and network. Application logic runs on the logic lane, never the main thread; a view, which only holds widgets and talks by messages, runs in the frame. A component that wants a core to itself declares a lane, and nothing else about it changes: not its code, not its messages, not the wiring that reaches it. Placement is fixed at compile time, so the binary has no scheduler and no work stealing.</p>
         <ul class="specs">
           <li><b>4 + n lanes</b><span>main, timeline and job for the framework, logic for components, and any lane a component declares</span></li>
           <li><b>One order</b><span>Mailboxes drain once per tick, in the same order on one lane or many. The last write to a piece of state wins, and every event arrives</span></li>
           <!-- TBD v0.2: the rule count and how many are held come from threading.md's matrix once phases 4 to 7 land (49 rules, 10 held, on 2026-10-28) -->
           <li><b>49 rules</b><span>Each says how it is enforced. A send is a constructor parameter, so the compiler sees every edge of the message graph</span></li>
+          <li><b>Chains</b><span>The path from a cause to its outcome is written once, as declared steps the compiler reads, and undone as one</span></li>
           <li><b>Watchdog</b><span>A lane that hangs is reported by name. It takes only its own thread down, never the window</span></li>
           <li><b>Compute queue</b><span>A Vulkan compute queue can be lent to one component, so physics never blocks a frame</span></li>
         </ul>
@@ -452,7 +453,7 @@
       <div class="text reveal">
         <div class="num"><em>06</em> Messaging</div>
         <h2 id="f6">Atchung. <span class="grad">One topic, any transport.</span></h2>
-        <p class="pitch">Inside the VM, messages go over a zero-copy bus with versioned, lock-free state snapshots. When a message has to leave the process, elektro-Q carries the same topic over TCP, a Unix socket or UDP, with codecs generated at compile time from <code>@Message</code> records. The fast in-VM path never pays for the network. A topic says whether it carries state, where the last write in a tick wins, or edges, where every message arrives in order.</p>
+        <p class="pitch">Inside the VM, messages go over a zero-copy bus with versioned, lock-free state snapshots. When a message has to leave the process, elektro-Q carries the same topic over TCP, a Unix socket or UDP, with codecs generated at compile time from <code>@Message</code> records. The fast in-VM path never pays for the network. A topic says whether it carries state, where the last write in a tick wins, or edges, where every message arrives in order. A <code>Ledger</code> holds state that changes only by declared steps sent to it, a <code>Chain</code> runs such steps from a cause to its outcome, and <code>Undo</code> puts a cause's changes back on every ledger at once.</p>
         <ul class="specs">
           <li><b>4 transports</b><span>in-VM, TCP, Unix domain sockets, and UDP netcode with sequencing, acks and a network simulator</span></li>
           <li><b>5 policies</b><span>For backpressure: drop oldest, drop newest, coalesce latest, block or fail</span></li>

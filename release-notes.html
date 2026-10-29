@@ -118,11 +118,13 @@
       <div class="eyebrow">In development</div>
       <h2 id="next-title">Since 0.1.2</h2>
       <p class="meta"><span class="chip">Not released yet</span> In the sources; the next release will have these.</p>
-      <!-- TBD v0.2: these hold once phases 4 and 5 land (the tick runs components, the processor closes the main thread, the mode is built). Name the mode's launch setting here when phase 4 picks it -->
+      <!-- TBD v0.2: these hold once phases 4 and 5 land (the tick runs components, the processor closes the main thread, the mode is built). Name the mode's launch setting here when phase 4 picks it. "A typed sender for each topic" waits on Outbox<T>; Senders is the interim form. Undo across ledgers waits on phase 4 for the view's half. If the tree-thread plan lands, recheck "views run in the frame" -->
+
       <div class="highlights">
-        <article><h3>Everything talks by messages</h3><p>Every part of an application, from a button to a controller, is a component with its own state and mailbox. Mailboxes drain once per tick in one order: the last write to a piece of state wins, and every event arrives. No callbacks and no locks.</p></article>
-        <article><h3>Multithreaded, by declaration</h3><p>Components run on a logic lane, never the main thread. One that wants a core to itself declares a lane, and nothing else about it changes. A single-thread mode runs the same ticks on the main thread for small and headless machines.</p></article>
-        <article><h3>Checked by the compiler</h3><p>A component is handed a typed sender for each topic it publishes on, so every edge of the message graph is in a constructor. No application code can reach the main thread.</p></article>
+        <article><h3>Everything talks by messages</h3><p>Every part of an application, from a button to a controller, is a component with its own state and mailbox. Mailboxes drain once per tick in one order: the last write to a piece of state wins, and every event arrives. No locks, and no callbacks run on another part's thread.</p></article>
+        <article><h3>Multithreaded, by declaration</h3><p>Application logic runs on a logic lane, never the main thread; views run in the frame. One that wants a core to itself declares a lane, and nothing else about it changes. A single-thread mode runs the same ticks on the main thread for small and headless machines.</p></article>
+        <article><h3>Transactions and chains</h3><p>State lives in ledgers that change only by declared steps sent to them. A chain runs those steps from a cause to its outcome, written once where the cause is, so what a click leads to reads top to bottom. Undo puts a whole cause back, across every ledger it touched.</p></article>
+        <article><h3>Checked by the compiler</h3><p>A component is handed a typed sender for each topic it publishes on, so every edge of the message graph is in a constructor. A chain step's body is read and refused if it captures anything. No application logic can reach the main thread.</p></article>
       </div>
       <div class="groups">
         <div>
@@ -132,7 +134,10 @@
             <li><b>Layered, multi-colour icons.</b></li>
             <li><b>The handler lane is gone.</b> A click, a key or an edit is a message the widget publishes, and a <code>Gui</code> owns no threads.</li>
             <li>Blocking work is a <code>@Job</code>: a request and a reply, run on the bounded job lane.</li>
-            <li><b>Atchung 1.4:</b> state and edge topics, and the tick that drains them.</li>
+            <li>A view is a <code>@View</code>: it holds widgets, runs in the frame, and hears its widgets as messages.</li>
+            <li>Time is a message source: a <code>Timer</code> publishes after a delay or on a beat, and a view's own motion is a <code>Tween</code> that announces its value.</li>
+            <li>A message may carry a list, set or map of values that may cross.</li>
+            <li><b>Atchung 1.4:</b> state and edge topics and the tick that drains them, and <code>Ledger</code>, <code>Chain</code> and <code>Undo</code>.</li>
           </ul>
         </div>
         <div>

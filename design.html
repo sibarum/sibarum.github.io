@@ -287,7 +287,7 @@
         <h2 id="p2">Never a <span class="grad">frozen window.</span></h2>
         <p class="pitch">A component that gets stuck takes only its own lane with it. The window keeps painting and taking input, and you can always close it. Frames are drawn when something changed and skipped when nothing did, without trading smoothness for either.</p>
         <ul class="specs">
-          <li><b>Lanes</b><span>Components run off the main thread, on the logic lane or one of their own, so a stall never reaches the window's own drawing.</span></li>
+          <li><b>Lanes</b><span>Application logic runs off the main thread, on the logic lane or a lane of its own, so a stall never reaches the window's own drawing.</span></li>
           <li><b>Last resort</b><span>A watchdog outside every lane ends the process if nothing else worked.</span></li>
         </ul>
         <a class="more" href="https://sibarum.github.io/vexelray-framework/overview.html">Never a frozen window, in the overview</a>

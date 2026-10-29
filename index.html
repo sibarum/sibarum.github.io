@@ -247,7 +247,7 @@
       <p class="lede">Every application above runs on the same framework, and it does things you would not expect from a desktop toolkit.</p>
       <div class="cards">
         <article class="card"><span class="stat">0 fps</span><h3><a href="https://sibarum.github.io/technology.html#on-demand">Frames only on demand</a></h3><p>A window draws when something changes and sleeps when nothing does, waking to its first frame in about a millisecond. The whole window is one draw call.</p></article>
-        <article class="card"><span class="stat">4 + n lanes</span><h3><a href="https://sibarum.github.io/technology.html#threads">Multithreaded by default</a></h3><p>The main thread only draws. Every part of an app talks by messages, off the main thread, and any part can take a thread to itself without changing how it is written. A part that hangs never freezes the window.</p></article>
+        <article class="card"><span class="stat">4 + n lanes</span><h3><a href="https://sibarum.github.io/technology.html#threads">Multithreaded by default</a></h3><p>The main thread draws, and app logic never runs there. Every part talks by messages, and any part can take a thread to itself without changing how it is written. A part that hangs never freezes the window.</p></article>
         <article class="card"><span class="stat">577 ns</span><h3><a href="https://sibarum.github.io/technology.html#kronometer">A clock you can test</a></h3><p>Kronometer drives every animation from one logical clock. On its virtual clock, a ten-minute scenario runs in microseconds, identically every time.</p></article>
       </div>
       <p class="action"><a class="button" href="https://sibarum.github.io/technology.html">See all the technology</a></p>
