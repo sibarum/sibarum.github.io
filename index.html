@@ -329,6 +329,12 @@
           <summary>Update</summary>
           <p>Run the install line again. Each application is updated to its latest version, and one that is already current is left alone. To reinstall anyway, set <code>$env:INSTALL_FORCE = '1'</code> first.</p>
         </details>
+        <details id="version">
+          <summary>Install an earlier release</summary>
+          <p>The install line always installs the latest release. To install a particular one instead, name it:</p>
+          <div class="cmd plain"><code id="version-cmd">$env:INSTALL_VERSION = '0.1.2'; irm https://sibarum.github.io/install.ps1 | iex</code><button class="copy" type="button" data-copy="version-cmd">Copy</button></div>
+          <p>Or as an argument, <code>--version 0.1.2</code>, to the script block above. Every application is installed at that release; one that does not have it is skipped and reported. The <a href="https://sibarum.github.io/release-notes.html">release notes</a> list the releases. Run the plain line again to go back to the latest.</p>
+        </details>
         <details id="uninstall">
           <summary>Uninstall</summary>
           <p>Use <em>Settings &rsaquo; Apps &rsaquo; Installed apps</em>, where each application has its own entry. Or, from PowerShell, list what is installed and remove all of it:</p>
@@ -355,6 +361,8 @@
           <div class="cmd plain"><code id="linux-only">curl -fsSL https://sibarum.github.io/install.sh | INSTALL_ONLY=text-editor,pix sh</code><button class="copy" type="button" data-copy="linux-only">Copy</button></div>
           <p>Everything, VexelRay Inspector too:</p>
           <div class="cmd plain"><code id="linux-everything">curl -fsSL https://sibarum.github.io/install.sh | sh -s -- --install-everything</code><button class="copy" type="button" data-copy="linux-everything">Copy</button></div>
+          <p>A particular release instead of the latest, every application at that release:</p>
+          <div class="cmd plain"><code id="linux-version">curl -fsSL https://sibarum.github.io/install.sh | sh -s -- --version 0.1.2</code><button class="copy" type="button" data-copy="linux-version">Copy</button></div>
           <p><code>INSTALL_NO_SHORTCUTS=1</code>, <code>INSTALL_NO_PATH=1</code> and <code>INSTALL_NO_ASSOCIATIONS=1</code> leave those out the same way. Run the line again to update. To remove everything:</p>
           <div class="cmd plain"><code id="linux-uninstall">"$HOME/.local/opt/text-editor/uninstall.sh" --all</code><button class="copy" type="button" data-copy="linux-uninstall">Copy</button></div>
           <p>If no window opens, check that a Vulkan driver is installed: <code>vulkaninfo --summary</code>, from your distribution's <code>vulkan-tools</code>, lists the graphics cards it can draw on.</p>
