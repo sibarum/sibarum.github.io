@@ -124,6 +124,7 @@
         <article><h3>Everything talks by messages</h3><p>Every part of an application, from a button to a controller, is a component with its own state and mailbox. Mailboxes drain once per tick in one order: the last write to a piece of state wins, and every event arrives. No locks, and no callbacks run on another part's thread.</p></article>
         <article><h3>Multithreaded, by declaration</h3><p>Application logic runs on a logic lane, never the main thread; views run in the frame. One that wants a core to itself declares a lane, and nothing else about it changes. A single-thread mode runs the same ticks on the main thread for small and headless machines.</p></article>
         <article><h3>Transactions and chains</h3><p>State lives in ledgers that change only by declared steps sent to them. A chain runs those steps from a cause to its outcome, written once where the cause is, so what a click leads to reads top to bottom. Undo puts a whole cause back, across every ledger it touched.</p></article>
+        <article><h3>Signed distance graphics</h3><p>SDG is to distance fields what SVG is to paths: a drawing in layers, each a field and a paint, sharp at any size. <!-- TBD v0.2: some file-type and background icons convert only once SDG 1.2's groups are built (sdg-groups.md) -->Icons and app marks are SDG drawings, in full colour, taking the theme's colours by role. Pictures open <code>.sdg</code> and <code>.sdgb</code> too.</p></article>
         <article><h3>Checked by the compiler</h3><p>A component is handed a typed sender for each topic it publishes on, so every edge of the message graph is in a constructor. A chain step's body is read and refused if it captures anything. No application logic can reach the main thread.</p></article>
       </div>
       <div class="groups">
@@ -137,6 +138,7 @@
             <li>A view is a <code>@View</code>: it holds widgets, runs in the frame, and hears its widgets as messages.</li>
             <li>Time is a message source: a <code>Timer</code> publishes after a delay or on a beat, and a view's own motion is a <code>Tween</code> that announces its value.</li>
             <li>A message may carry a list, set or map of values that may cross.</li>
+            <li><b>SDG</b> drawn natively: one quad per layer in the one uber-shader, with a look's effects on a layer. Two file forms, <code>.sdg</code> (XML, to read and exchange) and <code>.sdgb</code> (one compiled intrabuf payload). SVG and pictures convert to SDG, and the window, taskbar and tray sizes are rendered from it at build time.</li>
             <li><b>Atchung 1.4:</b> state and edge topics and the tick that drains them, and <code>Ledger</code>, <code>Chain</code> and <code>Undo</code>.</li>
           </ul>
         </div>

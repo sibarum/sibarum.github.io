@@ -398,6 +398,7 @@
           <li><b>27 floats</b><span>A fixed vertex size, however many effects an app uses</span></li>
           <li><b>4&times;10&#8315;&#8310;</b><span>The largest difference between CPU and GPU results across the differential suite</span></li>
           <li><b>9 numbers</b><span>A palette is nine authored values. Hover and press are one signed lightness step in Oklab</span></li>
+          <li><b>SDG</b><span>Signed distance graphics: what SVG is to paths, for distance fields. Icons, marks and pictures are layers of fields, sharp at any zoom, one quad a layer, with no path rasteriser</span></li>
         </ul>
         <a class="more" href="https://github.com/sibarum/supirvast">supirvast</a>
       </div>
@@ -516,7 +517,7 @@
           <div class="arrow"></div>
           <div class="step"><i>2</i><div><b>Annotation processing</b><small>wiring, lanes, message graph and codecs</small></div><em>javac</em></div>
           <div class="arrow"></div>
-          <div class="step"><i>3</i><div><b>SupirVast &rarr; SPIR-V</b><small>shaders and MSDF font atlases built by Maven plugins</small></div><em>mvn</em></div>
+          <div class="step"><i>3</i><div><b>SupirVast &rarr; SPIR-V</b><small>shaders, MSDF font atlases and SDG icons built by Maven plugins</small></div><em>mvn</em></div>
           <div class="arrow"></div>
           <div class="step"><i>4</i><div><b>GraalVM native-image</b><small>one native executable, with Panama FFM bindings to Win32 or X11, and to Vulkan; sizes on Windows, 0.1.2</small>
             <div class="exe"><span>calculator <b>45.1 MiB</b></span><span>pix <b>62.7 MiB</b></span><span>vexplore <b>64.4 MiB</b></span><span>fluid-sim <b>64.1 MiB</b></span></div></div><em>native</em></div>
@@ -662,7 +663,7 @@
           <tr><th scope="row">Release binary</th><td>GraalVM native-image, one executable per app for each platform (44&ndash;96 MiB on Windows in 0.1.2)</td></tr>
           <tr><th scope="row">Graphics</th><td>Vulkan, presented through a DXGI flip-model swapchain on Windows and a Vulkan swapchain on X11 on Linux. Bindings use Panama FFM directly</td></tr>
           <tr><th scope="row">Shaders</th><td>SupirVast IR &rarr; SPIR-V at build time. The same IR runs on the CPU through Truffle</td></tr>
-          <tr><th scope="row">GUI</th><td>Retained node tree, a single SDF uber-shader, flex layout in rem, em, dp, % and viewport units, zoom from 0.5&times; to 3&times;</td></tr>
+          <tr><th scope="row">GUI</th><td>Retained node tree, a single SDF uber-shader, flex layout in rem, em, dp, % and viewport units, zoom from 0.5&times; to 3&times;. Icons and art in SDG, layers of distance fields that take the theme's colours by role</td></tr>
           <tr><th scope="row">Frame loop</th><td>Draws on demand. 0 fps when idle, about 1 ms median wake to frame</td></tr>
           <tr><th scope="row">Threading</th><td>Multithreaded by default: main, timeline and job lanes for the framework, a logic lane for components, and any lane a component declares. Placed at compile time, platform threads, a watchdog per lane. A single-thread mode for small and headless machines</td></tr>
           <tr><th scope="row">Clock</th><td>Kronometer: realtime, virtual (deterministic) and driven clocks, and 4 slip policies</td></tr>
