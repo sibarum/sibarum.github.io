@@ -41,7 +41,7 @@
     return null;
   }
 
-  // A Copy button names the element it copies in data-copy (the home page) or data-for (Nanobuf golf). Its own copy
+  // A Copy button names the element it copies in data-copy (the home page and the VexelRay page) or data-for (Nanobuf golf). Its own copy
   // may go through document.execCommand("copy"), which fires the copy event below as well: that one is not counted
   // twice.
   var buttonAt = 0;

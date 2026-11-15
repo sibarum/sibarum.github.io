@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><title>sibarum</title>
+<!-- Five projects as five points, one in each project's colour, joined where one builds on another. -->
+<rect width="64" height="64" rx="14" fill="#0f1218"/>
+<g stroke="#3a4252" stroke-width="2" fill="none" stroke-linecap="round">
+  <path d="M18 18 L32 32 M18 18 L18 46 M32 32 L18 46 M32 32 L46 46 M32 32 L46 18 M18 18 L46 46"/>
+</g>
+<circle cx="18" cy="18" r="6" fill="#ffb547"/>
+<circle cx="46" cy="18" r="6" fill="#3ee6a0"/>
+<circle cx="32" cy="32" r="6.5" fill="#3ee0ff"/>
+<circle cx="18" cy="46" r="6" fill="#ff6a3d"/>
+<circle cx="46" cy="46" r="6" fill="#2fd3ff" stroke="#ffffff" stroke-width="1.6"/>
+</svg>

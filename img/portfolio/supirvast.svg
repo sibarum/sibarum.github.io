@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="240" height="240"><title>SupirVast</title>
+<!-- One IR, two lowerings: a stem that forks into a GPU die and a CPU syntax tree. -->
+<defs>
+  <linearGradient id="sv-stem" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd2b8"/><stop offset="1" stop-color="#ff6a3d"/></linearGradient>
+</defs>
+<path d="M60 104 L60 70 C60 56 34 56 34 40 M60 70 C60 56 86 56 86 40" fill="none" stroke="url(#sv-stem)" stroke-width="6" stroke-linecap="round"/>
+<circle cx="60" cy="104" r="7" fill="#ffd2b8" stroke="#1a0c06" stroke-width="2"/>
+<!-- GPU die -->
+<g stroke="#ff6a3d" stroke-width="2.2" stroke-linecap="round">
+  <line x1="24" y1="10" x2="24" y2="15"/><line x1="34" y1="10" x2="34" y2="15"/><line x1="44" y1="10" x2="44" y2="15"/>
+  <line x1="24" y1="37" x2="24" y2="42"/><line x1="44" y1="37" x2="44" y2="42"/>
+  <line x1="13" y1="21" x2="18" y2="21"/><line x1="13" y1="31" x2="18" y2="31"/>
+  <line x1="50" y1="21" x2="55" y2="21"/><line x1="50" y1="31" x2="55" y2="31"/>
+</g>
+<rect x="18" y="15" width="32" height="22" rx="3" fill="#2a120a" stroke="#ff6a3d" stroke-width="2.4"/>
+<rect x="25" y="20" width="18" height="12" rx="1.5" fill="#ff6a3d"/>
+<!-- CPU syntax tree -->
+<g stroke="#ffd2b8" stroke-width="2" stroke-linecap="round"><line x1="86" y1="22" x2="76" y2="36"/><line x1="86" y1="22" x2="96" y2="36"/><line x1="96" y1="36" x2="90" y2="48"/><line x1="96" y1="36" x2="104" y2="48"/></g>
+<g fill="#ffd2b8" stroke="#1a0c06" stroke-width="1.6"><circle cx="86" cy="20" r="6"/><circle cx="76" cy="38" r="5"/><circle cx="96" cy="37" r="5"/><circle cx="89" cy="50" r="4"/><circle cx="105" cy="50" r="4"/></g>
+</svg>

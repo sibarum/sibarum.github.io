@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="240" height="240"><title>Atchung! ElektroQ!</title>
+<!-- After the Atchung! ElektroQ! logo: a lightning bolt inside a ring of nodes, the ring running one way round. -->
+<rect width="120" height="120" rx="22" fill="#000"/>
+<g fill="none" stroke="#2fd3ff" stroke-width="5" stroke-linecap="round">
+  <path d="M60 20 A40 40 0 0 1 98.9 51"/>
+  <path d="M97 72 A40 40 0 0 1 30 88"/>
+  <path d="M22 70 A40 40 0 0 1 45 23"/>
+</g>
+<path d="M92 45 L99.5 53 L104 42.5 Z" fill="#2fd3ff"/>
+<g fill="#06141a" stroke="#2fd3ff" stroke-width="3.5"><circle cx="60" cy="20" r="6"/><circle cx="97.5" cy="72" r="6"/><circle cx="30" cy="88" r="6"/><circle cx="22" cy="70" r="0"/></g>
+<path d="M66 30 L42 64 L58 64 L50 92 L78 54 L62 54 L70 30 Z" fill="#2fd3ff" stroke="#e8fbff" stroke-width="2.4" stroke-linejoin="round" style="filter:drop-shadow(0 0 5px #2fd3ff)"/>
+</svg>
