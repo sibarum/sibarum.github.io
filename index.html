@@ -422,6 +422,7 @@
         <h2 id="cott-title" class="sr">COTT</h2>
         <p class="pitch">A calculator that divides by zero, and <em>a proof that it may</em>.</p>
         <p>In traction, a value is a pair <code>(p, q)</code> that is <strong>never reduced</strong>. <code>Q(1, 2)</code> and <code>Q(2, 4)</code> are different values, <code>q = 0</code> is allowed, and <code>0/0</code> is a value like any other. The same pair can be read as a complex number, a difference, a sum, a ratio, a product or a logarithm. Each reading has its own arithmetic, and moving between them is always an explicit conversion.</p>
+        <p>The ratio is an angle. <code>p/q = tan(arg(q + ip))</code> is proved for every pair, so a zero denominator is a direction rather than an error: <code>Q(1, 0)</code> points straight up, at 90°, and the calculator reads its ratio as <code>ω</code>.</p>
         <p>Because nothing is divided away, nothing is lost. An inverse returns to 1 with its norm kept as a residue, failing exactly where the product loses information, and <code>x − x</code> remembers what cancelled.</p>
         <ul class="points">
           <li><b>cott-lean is the specification.</b> Every theorem holds for every pair, none is checked on a sample, and CI checks that every declaration uses only Lean's standard axioms.</li>
