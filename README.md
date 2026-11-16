@@ -26,7 +26,7 @@ Nothing outside this repo writes to it: edit the pages here. (`nanobuf-golf.html
 | `technology.html` | the framework's feature page. Linked from the header of every page. Its figures come from each repository's own docs, so check them there when they change |
 | `design.html` | the seven design principles every application is held to, each linked to the doc that states it. Linked from the header of every page |
 | `release-notes.html` | what each release brought, newest first. Linked from the header of every page. Add a section when a version ships |
-| `licenses.html` | VexelRay's licenses, the third-party software built into the applications, and trademark notices. Its third-party list follows the `THIRD-PARTY-NOTICES.txt` files of the 0.1.2 releases; update it when an application gains or drops a library, font or native component |
+| `licenses.html` | VexelRay's licenses, the third-party software built into the applications, and trademark notices. Its third-party list follows the `THIRD-PARTY-NOTICES.txt` files published with the 0.2.0 releases (Calculator and Maistro 0.1.3); update it when an application gains or drops a library, font or native component |
 | `nanobuf-golf.html` | Nanobuf golfed: a one-line reader and writer per language, with a leaderboard. **Written by `nanobuf-golf/fill.pl`** from `nanobuf-golf/page.template.html` and the entries; edit the template, not the page, and rerun the script after an entry changes |
 | `nanobuf-golf/` | The golf entries, a driver per language, and `Golf.java`, the harness that holds every entry to the same cases. See its README |
 
