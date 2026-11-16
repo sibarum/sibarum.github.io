@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VexelRay</title>
-<meta name="description" content="Nine desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.">
+<meta name="description" content="Seven desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.">
 <meta property="og:title" content="VexelRay">
-<meta property="og:description" content="Nine desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.">
+<meta property="og:description" content="Seven desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.">
 <link rel="icon" href="img/logo.svg">
 <style>
   :root {
@@ -160,7 +160,7 @@
       <img class="hero-logo" src="img/hero-logo.svg" alt="">
       <span class="badge"><span data-version="windows"></span> · experimental prerelease</span>
       <h1>VexelRay</h1>
-      <p class="tagline">Nine desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.</p>
+      <p class="tagline">Seven desktop applications for Windows and Linux, drawn live on the GPU, which know about each other.</p>
 
       <div class="install">
         <p class="notice" id="notice" hidden></p>
@@ -180,7 +180,7 @@
         <div class="platform" id="get-linux">
         <p class="install-label"><strong>Linux:</strong> paste this into a terminal and press <kbd>Enter</kbd></p>
         <div class="cmd"><code id="install-command-linux">curl -fsSL https://sibarum.github.io/install.sh | sh</code><button class="copy" type="button" data-copy="install-command-linux">Copy</button></div>
-        <p class="hint">No <code>sudo</code>: everything goes under <code>~/.local</code>, for your user. Running the same line again updates everything. It installs VexelRay IDE, Pix, MainFrame and Calculator, version <span data-version="linux">0.1.2</span>, and VexelRay Inspector <a href="#linux">if you ask for it</a>; the rest are not on Linux yet.</p>
+        <p class="hint">No <code>sudo</code>: everything goes under <code>~/.local</code>, for your user. Running the same line again updates everything. It installs Vexplore, VexelRay IDE, Rasterware and MainFrame at version <span data-version="linux">0.2.0</span>, Calculator, and VexelRay Inspector <a href="#linux">if you ask for it</a>. Maistro is not on Linux yet.</p>
         <ul class="facts">
           <li>No root</li>
           <li>Your user only</li>
@@ -198,7 +198,7 @@
     <div class="wrap">
     <div class="eyebrow">Applications</div>
     <h2 id="apps-title">What you get</h2>
-    <p class="lede">Desktop applications built on the VexelRay stack: a file explorer, a text editor, a picture and video player, a terminal, a calculator, fluid and rigid-body simulations, a desktop client for Claude Code, and an inspector that shows a running app's frame loop. They are separate programs that know about each other, so a file in the explorer opens in the editor or the viewer, and the editor can show a file in the explorer.</p>
+    <p class="lede">Desktop applications built on the VexelRay stack: a file explorer, a text editor, a picture and video player, a terminal, a calculator, a desktop client for Claude Code, and an inspector that shows a running app's frame loop. They are separate programs that know about each other, so a file in the explorer opens in the editor or the viewer, and the editor can show a file in the explorer.</p>
     <div class="apps">
         <article class="app" id="app-vexplore">
           <div class="shot"><img class="screen" src="img/vexplore-screen.png" alt="Vexplore: one video clicked, the suggestion rail offering all nine videos here and a move" loading="lazy"></div>
@@ -209,8 +209,8 @@
           <div class="app-body"><img src="img/text-editor.png" alt=""><div><h3><a href="https://sibarum.github.io/vexelray-framework/apps/text-editor.html">VexelRay IDE</a></h3><p>A tabbed text editor with a file navigator, on the VexelRay stack.</p></div></div>
         </article>
         <article class="app" id="app-pix">
-          <div class="shot"><img class="screen" src="img/pix-screen.png" alt="Pix: a picture, and under it the file's name, the filmstrip of its neighbours, and the controls" loading="lazy"></div>
-          <div class="app-body"><img src="img/pix.png" alt=""><div><h3><a href="https://sibarum.github.io/vexelray-framework/apps/pix.html">Pix</a></h3><p>Pictures, animations and video, with sound. Frames are decoded ahead and streamed to the GPU, so even large video plays smoothly, and the rest of the folder is a key press away.</p></div></div>
+          <div class="shot"><img class="screen" src="img/pix-screen.png" alt="Rasterware: a picture, and under it the file's name, the filmstrip of its neighbours, and the controls" loading="lazy"></div>
+          <div class="app-body"><img src="img/pix.png" alt=""><div><h3><a href="https://sibarum.github.io/vexelray-framework/apps/pix.html">Rasterware</a></h3><p>Pictures, animations and video, with sound. Frames are decoded ahead and streamed to the GPU, so even large video plays smoothly, and the rest of the folder is a key press away.</p></div></div>
         </article>
         <article class="app" id="app-mainframe">
           <div class="shot"><img class="screen" src="img/mainframe-screen.png" alt="MainFrame: PowerShell in a tab, a coloured git log and a folder listing" loading="lazy"></div>
@@ -219,14 +219,6 @@
         <article class="app" id="app-calculator">
           <div class="shot"><img class="screen" src="img/calculator-screen.png" alt="Calculator: two lines answered, each with its readings, and x^2-4 plotted" loading="lazy"></div>
           <div class="app-body"><img src="img/calculator.png" alt=""><div><h3><a href="https://sibarum.github.io/vexelray-framework/apps/calculator.html">Calculator</a></h3><p>A small calculator window onto cott-engine.</p></div></div>
-        </article>
-        <article class="app" id="app-fluid-sim">
-          <div class="shot"><img class="screen" src="img/fluid-sim-screen.png" alt="A dam break of water onto mercury: water (blue) rides on mercury (red)" loading="lazy"></div>
-          <div class="app-body"><img src="img/fluid-sim.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-sim-physics/tree/develop/vexelray-sim-fluid">Fluid Sim</a> <span class="opt">optional</span></h3><p>Fluid simulation experiments on the VexelRay stack: dam breaks, mixing, heat, boiling, slime and a 3D dam break, live on the GPU.</p></div></div>
-        </article>
-        <article class="app" id="app-rigid-sim">
-          <div class="shot"><img class="screen" src="img/rigid-sim-screen.png" alt="Rigid Sim: a pile of 1000 spheres slumping in its box, solved by Gauss–Seidel" loading="lazy"></div>
-          <div class="app-body"><img src="img/rigid-sim.png" alt=""><div><h3><a href="https://github.com/sibarum/vexelray-sim-physics/tree/develop/vexelray-sim-rigid">Rigid Sim</a> <span class="opt">optional</span></h3><p>Rigid-body simulation experiments on the VexelRay stack: spheres and boxes that collide, bounce, spin, roll and settle into piles, live on the GPU.</p></div></div>
         </article>
         <article class="app" id="app-maistro">
           <div class="shot"><img class="big" src="img/maistro.png" alt=""></div>
@@ -247,7 +239,7 @@
       <p class="lede">Every application above runs on the same framework, and it does things you would not expect from a desktop toolkit.</p>
       <div class="cards">
         <article class="card"><span class="stat">0 fps</span><h3><a href="https://sibarum.github.io/technology.html#on-demand">Frames only on demand</a></h3><p>A window draws when something changes and sleeps when nothing does, waking to its first frame in about a millisecond. The whole window is one draw call.</p></article>
-        <article class="card"><span class="stat">5 lanes</span><h3><a href="https://sibarum.github.io/technology.html#threads">Multithreaded by default</a></h3><p>The main thread only draws. App logic, disk work and time run on their own lanes, placed at compile time, so a part that hangs never freezes the window.</p></article>
+        <article class="card"><span class="stat">1 logic lane</span><h3><a href="https://sibarum.github.io/technology.html#threads">Multithreaded by default</a></h3><p>The main thread only draws. Components share one logic lane and talk by messages, so none needs a lock; time, jobs and I/O run on lanes of their own, and any component can take a lane with one annotation, wired the same way.</p></article>
         <article class="card"><span class="stat">577 ns</span><h3><a href="https://sibarum.github.io/technology.html#kronometer">A clock you can test</a></h3><p>Kronometer drives every animation from one logical clock. On its virtual clock, a ten-minute scenario runs in microseconds, identically every time.</p></article>
       </div>
       <p class="action"><a class="button" href="https://sibarum.github.io/technology.html">See all the technology</a></p>
@@ -303,8 +295,8 @@
           <ul>
             <li>each application in its own folder under <code>%LOCALAPPDATA%\Programs</code></li>
             <li>desktop and Start menu shortcuts</li>
-            <li>your user <code>PATH</code>, so <code>vexplore</code>, <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code>, <code>maistro</code> and <code>vexelray-inspector</code> work from a terminal</li>
-            <li><em>Open with</em> entries for the file types VexelRay IDE and Pix read. One becomes the default only for a type no other program has claimed: Windows does not let a new program take over an existing one, and neither does this</li>
+            <li>your user <code>PATH</code>, so <code>vexplore</code>, <code>vexelray-ide</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code>, <code>maistro</code> and <code>vexelray-inspector</code> work from a terminal</li>
+            <li><em>Open with</em> entries for the file types VexelRay IDE and Rasterware read. One becomes the default only for a type no other program has claimed: Windows does not let a new program take over an existing one, and neither does this</li>
             <li>an entry for each application in <em>Settings &rsaquo; Apps</em></li>
           </ul>
           <p>The window that opens has a box for each of these. To start them unticked, or to leave them out when the installer runs without a window, set any of these in the same PowerShell window before the install line:</p>
@@ -315,9 +307,9 @@
         <details id="only-some">
           <summary>Install only some of them</summary>
           <p>Untick the others in the window that opens. To choose ahead of it, or without a window, set <code>INSTALL_ONLY</code> in the same PowerShell window before the install line:</p>
-          <div class="cmd plain"><code id="only">$env:INSTALL_ONLY = 'vexplore,text-editor'</code><button class="copy" type="button" data-copy="only">Copy</button></div>
-          <p>The ids are <code>vexplore</code>, <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code>, <code>fluid-sim</code>, <code>rigid-sim</code>, <code>maistro</code> and <code>inspector</code>.</p>
-          <p>Fluid Sim, Rigid Sim, Maistro and VexelRay Inspector start unticked, and without the window they are left out unless already installed. Tick them to install them too, or name <code>fluid-sim</code>, <code>rigid-sim</code>, <code>maistro</code> and <code>inspector</code> in <code>INSTALL_ONLY</code>.</p>
+          <div class="cmd plain"><code id="only">$env:INSTALL_ONLY = 'vexplore,vexelray-ide'</code><button class="copy" type="button" data-copy="only">Copy</button></div>
+          <p>The ids are <code>vexplore</code>, <code>vexelray-ide</code>, <code>pix</code> (Rasterware), <code>mainframe</code>, <code>calculator</code>, <code>maistro</code> and <code>vexelray-inspector</code>. Until 0.2.0 the IDE was <code>text-editor</code> and the Inspector <code>inspector</code>, and their old manifests now point at the new ones.</p>
+          <p>Maistro and VexelRay Inspector start unticked, and without the window they are left out unless already installed. Tick them to install them too, or name <code>maistro</code> and <code>vexelray-inspector</code> in <code>INSTALL_ONLY</code>.</p>
         </details>
         <details id="everything">
           <summary>Install everything, without being asked</summary>
@@ -353,18 +345,18 @@
           <ul>
             <li>each application in its own folder under <code>~/.local/opt</code></li>
             <li>entries in your applications menu, and launchers on your desktop if you have a Desktop folder</li>
-            <li>links in <code>~/.local/bin</code>, so <code>text-editor</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code> and <code>vexelray-inspector</code> run from a terminal; a link is never put over a file that is not its own</li>
-            <li>file types VexelRay IDE and Pix open, under <em>Open With</em>; one becomes the default only where no program is</li>
+            <li>links in <code>~/.local/bin</code>, so <code>vexplore</code>, <code>vexelray-ide</code>, <code>pix</code>, <code>mainframe</code>, <code>calculator</code> and <code>vexelray-inspector</code> run from a terminal; a link is never put over a file that is not its own</li>
+            <li>file types VexelRay IDE and Rasterware open, under <em>Open With</em>; one becomes the default only where no program is</li>
           </ul>
-          <p>Linux has had releases since 0.1.2, built from the same sources as the Windows ones. VexelRay Inspector is optional, as on Windows: it is installed only when you name it in <code>INSTALL_ONLY</code>, pass <code>--install-everything</code>, or already have it. Vexplore, Fluid Sim, Rigid Sim and Maistro have no Linux version yet.</p>
+          <p>Linux has had releases since 0.1.2, built from the same sources as the Windows ones, and Vexplore joins it in 0.2.0. VexelRay Inspector is optional, as on Windows: it is installed only when you name <code>vexelray-inspector</code> in <code>INSTALL_ONLY</code>, pass <code>--install-everything</code>, or already have it. Maistro has no Linux version yet.</p>
           <p>Options go between the pipe and <code>sh</code>. Only some of the applications:</p>
-          <div class="cmd plain"><code id="linux-only">curl -fsSL https://sibarum.github.io/install.sh | INSTALL_ONLY=text-editor,pix sh</code><button class="copy" type="button" data-copy="linux-only">Copy</button></div>
+          <div class="cmd plain"><code id="linux-only">curl -fsSL https://sibarum.github.io/install.sh | INSTALL_ONLY=vexelray-ide,pix sh</code><button class="copy" type="button" data-copy="linux-only">Copy</button></div>
           <p>Everything, VexelRay Inspector too:</p>
           <div class="cmd plain"><code id="linux-everything">curl -fsSL https://sibarum.github.io/install.sh | sh -s -- --install-everything</code><button class="copy" type="button" data-copy="linux-everything">Copy</button></div>
           <p>A particular release instead of the latest, every application at that release:</p>
           <div class="cmd plain"><code id="linux-version">curl -fsSL https://sibarum.github.io/install.sh | sh -s -- --version 0.1.2</code><button class="copy" type="button" data-copy="linux-version">Copy</button></div>
           <p><code>INSTALL_NO_SHORTCUTS=1</code>, <code>INSTALL_NO_PATH=1</code> and <code>INSTALL_NO_ASSOCIATIONS=1</code> leave those out the same way. Run the line again to update. To remove everything:</p>
-          <div class="cmd plain"><code id="linux-uninstall">"$HOME/.local/opt/text-editor/uninstall.sh" --all</code><button class="copy" type="button" data-copy="linux-uninstall">Copy</button></div>
+          <div class="cmd plain"><code id="linux-uninstall">"$HOME/.local/opt/vexplore/uninstall.sh" --all</code><button class="copy" type="button" data-copy="linux-uninstall">Copy</button></div>
           <p>If no window opens, check that a Vulkan driver is installed: <code>vulkaninfo --summary</code>, from your distribution's <code>vulkan-tools</code>, lists the graphics cards it can draw on.</p>
           <p>Needs 64-bit (x86_64) Linux with an X11 desktop, or Wayland with XWayland, and a Vulkan driver: Mesa's, or your graphics card maker's. For now every window draws at 100%, whatever the desktop's scaling.</p>
         </details>

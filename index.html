@@ -338,7 +338,7 @@
     <ol>
       <li style="--c:var(--pontif)"><a href="#pontif"><img src="img/portfolio/pontif.svg" alt=""><span class="k">01</span><b>Pontif</b><span>A language whose declared types are claims the compiler proves.</span></a></li>
       <li style="--c:var(--cott)"><a href="#cott"><img src="img/portfolio/cott.svg" alt=""><span class="k">02</span><b>COTT</b><span>Traction: numbers as unreduced pairs, proved in Lean 4.</span></a></li>
-      <li style="--c:var(--vex)"><a href="#vexelray"><img src="img/logo.svg" alt=""><span class="k">03</span><b>VexelRay</b><span>Nine desktop applications drawn live on the GPU.</span></a></li>
+      <li style="--c:var(--vex)"><a href="#vexelray"><img src="img/logo.svg" alt=""><span class="k">03</span><b>VexelRay</b><span>Seven desktop applications drawn live on the GPU.</span></a></li>
       <li style="--c:var(--supir)"><a href="#supirvast"><img src="img/portfolio/supirvast.svg" alt=""><span class="k">04</span><b>SupirVast</b><span>One shader IR: SPIR-V on the GPU, Truffle on the CPU.</span></a></li>
       <li style="--c:var(--atch)"><a href="#atchung"><img src="img/portfolio/atchung-mark.svg" alt=""><span class="k">05</span><b>Atchung! ElektroQ!</b><span>An in-process bus, and typed messages across any wire.</span></a></li>
     </ol>
@@ -485,12 +485,12 @@
       <div class="prose reveal">
         <h2 id="vexelray-title" class="sr">VexelRay</h2>
         <p class="pitch">Desktop applications <em>drawn live on the GPU</em> that rest at zero frames per second.</p>
-        <p>VexelRay is a whole stack, from a Vulkan engine through to nine applications that know about each other: a file explorer that suggests instead of asking, an IDE, a terminal, a picture and video viewer, a calculator, physics sandboxes and more. A window draws when something changes and sleeps when nothing does, and <strong>the whole window is one draw call</strong>: a single SDF uber-shader draws shadows, lighting and text.</p>
-        <p>Each application is compiled ahead of time by GraalVM Native Image into one executable that runs without a JVM. The main thread only draws. App logic, disk work and time run on their own lanes, placed at compile time, so <strong>a part that hangs never freezes the window</strong>.</p>
+        <p>VexelRay is a whole stack, from a Vulkan engine through to seven applications that know about each other: a file explorer that suggests instead of asking, an IDE, a terminal, a picture and video viewer, a calculator and more, with physics sandboxes beside them. A window draws when something changes and sleeps when nothing does, and <strong>the whole window is one draw call</strong>: a single SDF uber-shader draws shadows, lighting and text.</p>
+        <p>Each application is compiled ahead of time by GraalVM Native Image into one executable that runs without a JVM. The main thread only draws. App logic runs on a logic lane of its own, talking only by messages, and time, jobs and I/O on lanes of theirs, so <strong>a part that hangs never freezes the window</strong>.</p>
         <nav class="apps" aria-label="The applications">
           <a href="https://sibarum.github.io/vexelray-framework/apps/vexplore.html"><img src="img/vexplore.png" alt="">Vexplore</a>
           <a href="https://sibarum.github.io/vexelray-framework/apps/text-editor.html"><img src="img/text-editor.png" alt="">VexelRay IDE</a>
-          <a href="https://sibarum.github.io/vexelray-framework/apps/pix.html"><img src="img/pix.png" alt="">Pix</a>
+          <a href="https://sibarum.github.io/vexelray-framework/apps/pix.html"><img src="img/pix.png" alt="">Rasterware</a>
           <a href="https://sibarum.github.io/vexelray-framework/apps/mainframe.html"><img src="img/mainframe.png" alt="">MainFrame</a>
           <a href="https://sibarum.github.io/vexelray-framework/apps/calculator.html"><img src="img/calculator.png" alt="">Calculator</a>
           <a href="https://github.com/sibarum/vexelray-sim-physics/tree/develop/vexelray-sim-fluid"><img src="img/fluid-sim.png" alt="">Fluid Sim</a>
@@ -499,7 +499,7 @@
           <a href="https://github.com/sibarum/vexelray-inspector"><img src="img/inspector.png" alt="">Inspector</a>
         </nav>
         <div class="install">
-          <p class="install-label"><strong>Install the applications</strong> · <span data-version="windows">0.1.2</span>, an experimental prerelease</p>
+          <p class="install-label"><strong>Install the applications</strong> · <span data-version="windows">0.2.0</span>, an experimental prerelease</p>
           <div class="cmd"><code id="home-install-windows" data-prompt="PS> ">irm https://sibarum.github.io/install.ps1 | iex</code><button class="copy" type="button" data-copy="home-install-windows">Copy</button></div>
           <div class="cmd"><code id="home-install-linux" data-prompt="$ ">curl -fsSL https://sibarum.github.io/install.sh | sh</code><button class="copy" type="button" data-copy="home-install-linux">Copy</button></div>
         </div>

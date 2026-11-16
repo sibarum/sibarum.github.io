@@ -5,7 +5,7 @@
 //   <script src="https://sibarum.github.io/versions.js" defer></script>
 (function () {
   "use strict";
-  var manifests = {"windows":"https://raw.githubusercontent.com/sibarum/vexelray-dist/main/apps/vexplore/manifest.json","linux":"https://raw.githubusercontent.com/sibarum/vexelray-dist/main/apps/text-editor/manifest.linux.txt"};
+  var manifests = {"windows":"https://raw.githubusercontent.com/sibarum/vexelray-dist/main/apps/vexplore/manifest.json","linux":"https://raw.githubusercontent.com/sibarum/vexelray-dist/main/apps/vexelray-ide/manifest.linux.txt"};
   var read = {
     windows: function (text) { return JSON.parse(text).latest; },
     linux: function (text) { var m = /^latest\t([^\t\r\n]+)/m.exec(text); return m && m[1]; }

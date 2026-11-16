@@ -106,7 +106,7 @@
       <h1>What's <span class="grad">new.</span></h1>
       <p class="lede">What each release brought to the applications, the framework under them and the installers, newest first. A change is listed under the first release that has it. VexelRay is an experimental prerelease, so expect a lot to change between versions.</p>
       <ul class="versions">
-        <li><a href="#next"><b>next</b><span>in development</span></a></li>
+        <li><a href="#v0-2-0"><b>0.2.0</b><span>15 Nov 2026</span></a></li>
         <li><a href="#v0-1-2"><b>0.1.2</b><span>25 Oct 2026</span></a></li>
         <li><a href="#v0-1-1"><b>0.1.1</b><span>20 Oct 2026</span></a></li>
         <li><a href="#v0-1-0"><b>0.1.0</b><span>13 Oct 2026</span></a></li>
@@ -114,27 +114,50 @@
     </div>
   </header>
 
-  <section id="next" aria-labelledby="next-title">
+  <section id="v0-2-0" aria-labelledby="v020-title">
     <div class="wrap">
-      <div class="eyebrow">In development</div>
-      <h2 id="next-title">Since 0.1.2</h2>
-      <p class="meta"><span class="chip">Not released yet</span> In the sources; the next release will have these.</p>
+      <div class="eyebrow">15 November 2026</div>
+      <h2 id="v020-title">0.2.0: the message model</h2>
+      <p class="meta"><span class="chip new">Windows</span><span class="chip new">Linux</span> VexelRay IDE, Vexplore, Rasterware, MainFrame and VexelRay Inspector at 0.2.0; Calculator and Maistro at 0.1.3.</p>
+      <div class="highlights">
+        <article><h3>Multithreaded, by design</h3><p>The reason for this release's rework. Every part of an application is now a component that owns its state and talks only by messages. Components share one logic lane by default, so none needs a lock and a run can be replayed from its message log. Any component can take a lane of its own with one annotation, wired exactly as before. The main thread runs no application code. See <a href="technology.html#threads">Technology</a>.</p></article>
+        <article><h3>New names, and Vexplore on Linux</h3><p>Vex is now <b>VexelRay IDE</b> and Pix is now <b>Rasterware</b>. The IDE's installer id is now <code>vexelray-ide</code> and the Inspector's <code>vexelray-inspector</code>; installs under the old ids still update. Vexplore has its first Linux release.</p></article>
+        <article><h3>Light and Dark, and your own keys</h3><p>Every application has a Light and a Dark look, chosen from the application menu in its title bar, beside About and a <b>Key bindings</b> window where any shortcut can be rebound.</p></article>
+      </div>
       <div class="groups">
-        <div>
-          <h3>Framework</h3>
-          <ul>
-            <li><b>Frames are capped at 60 Hz</b> on any display, so a high-refresh monitor no longer means more work for the same picture.</li>
-            <li><b>Layered, multi-colour icons.</b></li>
-          </ul>
-        </div>
         <div>
           <h3>Applications</h3>
           <ul>
-            <li><b>Vex:</b> icons in the navigator, and the navigator lists a folder again after a save.</li>
-            <li><b>Maistro:</b> agent tools that look at the VexelRay applications you have running.</li>
+            <li><b>VexelRay IDE:</b> a Git mode for status, staging, diffs, commits, history, branches and push. A Run menu with a console. A project index with <kbd>Ctrl</kbd>+<kbd>T</kbd> symbol search. Pontif support: highlighting, checking as you type and go-to-definition. Sixteen more grammars, a formatted Markdown view, scratches and word wrap. The navigator shows file-type icons, lists a folder again after a save, and folds chains of single folders into one row.</li>
+            <li><b>Rasterware:</b> video decodes on the GPU. Draws SDG vector drawings, traces a picture into one, and edits them with a Layers panel. Converts to PNG, SDG or video. Full screen on <kbd>F11</kbd>, pinch zoom, menus and a Details panel. It keeps the <code>pix</code> command and installer id.</li>
+            <li><b>Vexplore:</b> a new design, a Preview Dock, Two Folders to compare, delete with undo, move, copy, archive and rename, and a list that follows the disk. Opens files in Rasterware, the IDE and MainFrame.</li>
+            <li><b>MainFrame:</b> rebuilt on 0.2, with a Settings window, workspaces with environment scripts, and a terminal that follows the look.</li>
+            <li><b>VexelRay Inspector:</b> rebuilt around a live timeline that follows an event through every panel, with message-graph, flow and thread panels. <em>Run again</em> replays a run and lists the sends that differ. Statistics over a stretch with <kbd>Shift</kbd>+drag, and CSV export.</li>
+            <li><b>Maistro 0.1.3:</b> agent tools that look at the VexelRay applications you have running, and a check that Claude Code is signed in.</li>
+            <li><b>Calculator 0.1.3:</b> rebuilt on the 0.2 stack.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Framework</h3>
+          <ul>
+            <li><b>The message model:</b> one logic lane by default, declared lanes with <code>@Component(lane = &hellip;)</code>, blocking work as jobs, and a thread for each source and destination. The list of lanes is closed.</li>
+            <li><b><code>--logic=main</code></b> runs the same ticks on the main thread, and a test requires identical results in both modes.</li>
+            <li>Work not done by a tick's deadline carries to the next in order, so one slow tick does not cost a frame.</li>
+            <li>Frames are capped at 60 Hz on any display. Input and messages are not held to the cap.</li>
+            <li>Icons drawn as SDG, in full colour and themed.</li>
+            <li>Menus work from the keyboard, shortcuts are drawn as key caps, and tall menus scroll.</li>
+            <li><b>Codec:</b> video through a GPU feed, and a decode that fails gives a plain reason instead of hanging.</li>
+            <li><b>Atchung 1.4:</b> the message layer under all of it, with tick recording and replay.</li>
+          </ul>
+          <h3>Installers</h3>
+          <ul>
+            <li>Install an earlier release with <code>INSTALL_VERSION</code> or <code>--version</code>.</li>
+            <li><em>Open with</em> names the application.</li>
+            <li>The suite installer has Calculator and Maistro again. Fluid Sim and Rigid Sim leave it until the GPU device feed they need lands; their 0.1.2 releases stay published.</li>
           </ul>
         </div>
       </div>
+      <p class="note">Not on Linux yet: Maistro, Fluid Sim and Rigid Sim. Wayland works through XWayland, and every window draws at 100%, whatever the desktop's scaling.</p>
     </div>
   </section>
 
